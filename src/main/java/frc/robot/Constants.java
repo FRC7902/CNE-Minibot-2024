@@ -13,7 +13,16 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class DriveConstants {
+
+    //Motor IDs, currently not the correct IDs, will change later.
+    public static final int leftBackCAN = 30;
+    public static final int leftFrontCAN = 31;
+    public static final int rightBackCAN = 32;
+    public static final int rightFrontCAN = 33;
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 }
+
