@@ -56,9 +56,22 @@ public class DriveSubsystem extends SubsystemBase {
     // 
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
   }
+  public void TranslateXfoward(){ 
+    
+  }
 
+  public void translateZrotation(){
+
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //This code limits the motor current to 80 amps to prevent overheating
+    
+    m_leftLeaderMotor.setSmartCurrentLimit(50);
+    m_rightLeaderMotor.setSmartCurrentLimit(50);
+    m_leftFollowerMotor.setSmartCurrentLimit(50);
+    m_rightFollowerMotor.setSmartCurrentLimit(50);
+    
   }
 }
