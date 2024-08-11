@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,12 +29,15 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
   private final SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
   
-  // Instantiates the DifferentialDrive class
-  private final DifferentialDrive m_drive;
+  // Instantiates the DifferentialDrive class and the XboxController class  
+  
+
 
   // ENCODER DECLARATION
   private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
+
+  
 
 
   public DriveSubsystem() {
@@ -54,24 +58,31 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollowerMotor.follow(m_rightLeaderMotor);
 
     // 
-    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+    
   }
-  public void TranslateXfoward(){ 
+  public void TranslateXforward(){ 
     
   }
 
-  public void translateZrotation(){
+  public void TranslateZrotation(){
 
   }
+
+  public void curvatureDrive (double leftY, double rightX) {
+    frc.robot.RobotContainer.m_drive.curvatureDrive(leftY, rightX, true);}
+
+
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
     //This code limits the motor current to 80 amps to prevent overheating
-    
+
     m_leftLeaderMotor.setSmartCurrentLimit(50);
     m_rightLeaderMotor.setSmartCurrentLimit(50);
     m_leftFollowerMotor.setSmartCurrentLimit(50);
     m_rightFollowerMotor.setSmartCurrentLimit(50);
     
+
   }
 }
