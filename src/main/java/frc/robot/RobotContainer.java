@@ -28,7 +28,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public static final DriveSubsystem m_drivesubsystem = new DriveSubsystem();
+  public static final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   public static final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
 
@@ -40,6 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    m_driveSubsystem.setDefaultCommand(new CurvatureDrive());
   }
 
   /**

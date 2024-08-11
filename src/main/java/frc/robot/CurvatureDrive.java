@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class CurvatureDrive extends Command {
   /** Creates a new CurvatureDrive. */
   public CurvatureDrive() {
-    addRequirements(RobotContainer.m_drivesubsystem);
+    addRequirements(RobotContainer.m_driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,7 +25,7 @@ public class CurvatureDrive extends Command {
     double moveSpeed = ((frc.robot.RobotContainer.m_driverController.getLeftY()) * 0.5);
     double rotateSpeed = ((frc.robot.RobotContainer.m_driverController.getRightX()) * 0.5);
 
-    RobotContainer.m_drivesubsystem.curvatureDrive(moveSpeed, rotateSpeed);
+    RobotContainer.m_driveSubsystem.curvatureDrive(moveSpeed, rotateSpeed);
 
   }
 
