@@ -27,8 +27,9 @@ public class DriveSubsystem extends SubsystemBase {
       CANSparkMax.MotorType.kBrushless);
 
   // Allows interfacing with the integrated PID Controller on the motors.
-  private final SparkPIDController m_leftPID = m_leftLeaderMotor.getPIDController();
-  private final SparkPIDController m_rightPID = m_rightLeaderMotor.getPIDController();
+  // PID contoller objects
+  private final SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
+  private final SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
 
   // Instantiates the DifferentialDrive class and the XboxController class
   public final DifferentialDrive m_drive;
@@ -72,6 +73,15 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
+  }
+
+  public void PIDControlobjects() {
+    // Sets the speed of motors based on the PID control
+    int setpoint;
+    m_leftLeaderMotor.set(leftSpeedPID.getOutputMax());
+    m_rightLeaderMotor.set(rightSpeedPID.getOutputMax());
+    m_leftFollowerMotor.set(leftSpeedPID.getOutputMax());
+    m_rightFollowerMotor.set(rightSpeedPID.getOutputMax());
   }
 
   @Override
