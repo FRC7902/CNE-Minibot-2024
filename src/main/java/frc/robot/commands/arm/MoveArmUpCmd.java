@@ -10,7 +10,7 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public class MoveArmUpCmd extends Command {
   private ArmSubsystem m_armSubsystem;
-  private static final double ARM_SPEED = -0.5;
+  private static final double ARM_SPEED = 0.5;
 
   /** Creates a new MoveArmDownCmd. */
   public MoveArmUpCmd(ArmSubsystem arm) {
