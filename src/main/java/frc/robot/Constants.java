@@ -16,4 +16,23 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class ArmConstants {
+    public static final int ArmLeaderMotorCAN = 21;
+    public static final int ArmFollowerMotorCAN = 16;
+    public static final int EncoderCPR = 4096;
+    public static final double ArmShoulderFeedForward = 0.38;
+    public static final double EncoderToOutputRatio = 2.05;
+    public static final double restDegreesFromHorizontal = 90;
+    public static final double manualSlowSpeed = 0.2;
+
+    // public static final double ArmGroundSetpoint = 10;
+    // public static final double ArmSpeakerSetpoint = 34;
+    // public static final double ArmSpeakerSetpoint = 20;
+    // public static final double ArmFeedingSetpoint = 20;
+    // public static final double ArmAmpSetpoint = 103;
+
+    public static final double GearRatio = 1.0 / 10.0;
+    public static final double MAX_ANGLE = 90;    
+  }
 }
