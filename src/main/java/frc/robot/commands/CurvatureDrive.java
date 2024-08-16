@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class CurvatureDrive extends Command {
   /** Creates a new CurvatureDrive. */
   public CurvatureDrive() {
-    addRequirements(RobotContainer.m_driveSubsystem);
+    addRequirements(frc.robot.RobotContainer.m_driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,7 +25,7 @@ public class CurvatureDrive extends Command {
     double moveSpeed = ((frc.robot.RobotContainer.m_driverController.getLeftY()) * 0.5);
     double rotateSpeed = ((frc.robot.RobotContainer.m_driverController.getRightX()) * 0.5);
 
-    RobotContainer.m_driveSubsystem.curvatureDrive(moveSpeed, rotateSpeed);
+    frc.robot.RobotContainer.m_driveSubsystem.curvatureDrive(moveSpeed, rotateSpeed);
 
   }
 
