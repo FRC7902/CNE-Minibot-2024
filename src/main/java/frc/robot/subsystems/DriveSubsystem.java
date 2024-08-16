@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   
 
   private void setPidGains(){
-    leftSpeedPID.setP(0.0);
+    leftSpeedPID.setP(0.0); //Integral, derivative, and proportional gains for the PID controller
     leftSpeedPID.setD(0.0);
     leftSpeedPID.setI(0.0);
   
@@ -49,7 +49,14 @@ public class DriveSubsystem extends SubsystemBase {
     rightSpeedPID.setI(0.0);
   }
 
+  double DriveDistance=0.0; //Allows setDistanceToDrive to accept an argument
+  public void setDistanceToDrive(double DriveDistance){
 
+    this.DriveDistance=DriveDistance;
+    rightSpeedPID.setReference(DriveDistance,com.revrobotics.CANSparkBase.ControlType.kPosition);
+    leftSpeedPID.setReference(DriveDistance,com.revrobotics.CANSparkBase.ControlType.kPosition);  
+
+  }
   
   public void setPoint(){
     //Setpoints for the PID system
