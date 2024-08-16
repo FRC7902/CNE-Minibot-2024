@@ -37,6 +37,26 @@ public class DriveSubsystem extends SubsystemBase {
   // ENCODER DECLARATION
   private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
+  
+
+  private void setPidGains(){
+    leftSpeedPID.setP(0.0);
+    leftSpeedPID.setD(0.0);
+    leftSpeedPID.setI(0.0);
+  
+    rightSpeedPID.setP(0.0);
+    rightSpeedPID.setD(0.0);
+    rightSpeedPID.setI(0.0);
+  }
+
+
+  
+  public void setPoint(){
+    //Setpoints for the PID system
+    rightSpeedPID.setReference(0,com.revrobotics.CANSparkBase.ControlType.kVelocity);
+    leftSpeedPID.setReference(0,com.revrobotics.CANSparkBase.ControlType.kVelocity);
+  }
+
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -75,9 +95,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
   }
 
-  public void PIDControlobjects() {
-    // Sets the speed of motors based on the PID control
-    int setpoint;
+  
+  public void pidControlObjects() {
+    //Sets the speed of motors based on the PID control 
+
     m_leftLeaderMotor.set(leftSpeedPID.getOutputMax());
     m_rightLeaderMotor.set(rightSpeedPID.getOutputMax());
     m_leftFollowerMotor.set(leftSpeedPID.getOutputMax());
@@ -87,5 +108,14 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // This code limits the motor current to 40 amps to prevent overheating
+
+    m_leftLeaderMotor.setSmartCurrentLimit(40);
+    m_rightLeaderMotor.setSmartCurrentLimit(40);
+    m_leftFollowerMotor.setSmartCurrentLimit(40);
+    m_rightFollowerMotor.setSmartCurrentLimit(40);
+
+
+
   }
 }
