@@ -8,40 +8,32 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class MoveArmUpCmd extends Command {
-  private ArmSubsystem m_armSubsystem;
-  private static final double ARM_SPEED = 0.5;
+public class BaseSetpoint extends Command {
+  private final ArmSubsystem m_armSubsystem;
 
-  /** Creates a new MoveArmDownCmd. */
-  public MoveArmUpCmd(ArmSubsystem arm) {
-    m_armSubsystem = arm;
+  /** Creates a new BaseSetpointCmd. */
+  public BaseSetpoint(ArmSubsystem arm) {
+    m_armSubsystem =  arm;
     addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_armSubsystem.setSetpoint(ArmConstants.BaseSetpoint);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    // Move arm up if not at upper limit
-    if (m_armSubsystem.getAngle() < ArmConstants.MaxAngle) {
-      m_armSubsystem.setPower(ARM_SPEED);
-    } else {
-      m_armSubsystem.stopMotor();
-    }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end() {
-    m_armSubsystem.stopMotor();
-  }
+  public void end() {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_armSubsystem.atSetpoint();
   }
 }
