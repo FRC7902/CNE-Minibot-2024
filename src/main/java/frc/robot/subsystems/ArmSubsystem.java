@@ -46,6 +46,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   private double m_setpoint = 0;
 
+  private static boolean isLimitSwitchMuted = false;
+
   //private final DriveSubsystem m_driveSubsystem;
 
   /** Creates a new ArmSubsystem. */
@@ -94,7 +96,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void setSetpoint(double setpoint) {
     m_setpoint = setpoint;
-    m_armLeaderMotor.set(ControlMode.Position, setpoint);
+    // Set setpoint in ticks
+    m_armLeaderMotor.set(ControlMode.Position, util.degToCTRESensorUnits(setpoint, ArmConstants.EncoderCPR));
   }
 
   public boolean atSetpoint() {
@@ -103,8 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void usePIDOutput() {
     // Use PID output to set motor power
-    m_armLeaderMotor.set(ControlMode.Position, m_setpoint
-    );
+    m_armLeaderMotor.set(ControlMode.Position, m_setpoint);
   }
 
   public double getAngle() {
@@ -117,6 +119,11 @@ public class ArmSubsystem extends SubsystemBase {
   public double modAngleInTicks(double angleInTicks) {
     // Modulo the angle to within 0 - 4096
     return Math.IEEEremainder(angleInTicks, ArmConstants.EncoderCPR);
+  }
+
+  public void toggleLimitSwitchMute() {
+    isLimitSwitchMuted = !isLimitSwitchMuted;
+    System.out.println("Limit switch muted: " + isLimitSwitchMuted);
   }
 
   public boolean atZeroPos() {
@@ -132,8 +139,10 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle", getAngle());
-    SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
+    SmartDashboard.putNumber("Arm Angle: ", getAngle());
+    SmartDashboard.putNumber("Arm Setpoint: ", m_setpoint);
+
+    SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
  
   }
 

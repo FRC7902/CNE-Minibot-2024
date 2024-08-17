@@ -42,7 +42,7 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    // Setpoints
+    // Setpoints in degrees
     public static final double BaseSetpoint = 0.0;
     public static final double RaisedSetpoint = 45.0;
 
@@ -50,7 +50,7 @@ public final class Constants {
 
     public static final double MaxAngle = 90;    
 
-    public static final double PositionTolerance = 2;   // 2 degrees
+    public static final double PositionTolerance = 5;   // 5 degrees
   }
 
   public static class IOConstants { 

@@ -13,11 +13,13 @@ import frc.robot.commands.arm.BaseSetpoint;
 import frc.robot.commands.arm.RaisedSetpoint;
 import frc.robot.commands.arm.MoveArmDownCmd;
 import frc.robot.commands.arm.MoveArmUpCmd;
+import frc.robot.commands.arm.MuteLimitSwitch;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -73,6 +75,9 @@ public class RobotContainer {
     new JoystickButton(m_operatorStick, IOConstants.kB).whileTrue(new BaseSetpoint(m_armSubsystem));
     new JoystickButton(m_operatorStick, IOConstants.kX).whileTrue(new RaisedSetpoint(m_armSubsystem));
 
+    // Mute limit switch when the Right D-pad is held 
+    new POVButton(m_operatorStick, 90) 
+    .whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
 
   /**
