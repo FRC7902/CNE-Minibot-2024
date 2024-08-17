@@ -24,4 +24,13 @@ public class ArmUtils {
         return (angleInSensorUnits * 2 * Math.PI * ArmConstants.GearRatio / encoderCPR);
     }
 
+    // ku = ultimate gain, tu = oscillation period
+    public double[] setZieglerNicholsConstants(double ku, double tu) {
+        double constants[] = new double[3];
+        constants[0] = 0.2 * ku;                 // kP
+        constants[1] = 2 * ku / tu;              // kI
+        constants[2] = constants[0] * tu / 8;    // kD
+        return constants;
+      }
+
 }

@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,34 +28,44 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.ArmUtils;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
+  private final static ArmUtils util = new ArmUtils();
   
   // Declare motor controllers
-  private final WPI_TalonSRX m_armLeaderMotor;
-  private final WPI_VictorSPX m_armPivotFollower;
+  private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
+  private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
   
-  private final DriveSubsystem m_driveSubsystem;
+  // Simulation objects
+  /* private final SingleJointedArmSim m_armSim = new SingleJointedArmSim()
+  private final Mechanism2d m_mech2d;
+  private final MechanismLigament2d m_armLigament;
+  private final TalonSRXSimCollection m_armLeaderMotorSim; */
+
+  private double m_setpoint = 0;
+
+  //private final DriveSubsystem m_driveSubsystem;
 
   /** Creates a new ArmSubsystem. */
-  public ArmSubsystem(DriveSubsystem drive) {
-    m_driveSubsystem = drive;
-    
-    // Initialize motor controllers
-    m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
-    m_armPivotFollower = new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
-    
-    // Configure motors
+  public ArmSubsystem() {    
+    //m_driveSubsystem = drive;    
+
     configureMotors();
+
   }
 
   private void configureMotors() {
     // Configure leader motor
     m_armLeaderMotor.configFactoryDefault();
-    m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
     m_armLeaderMotor.setSensorPhase(true);
     m_armLeaderMotor.setInverted(true);
+    m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+
+    // Set velocity and acceleration of motors
+    m_armLeaderMotor.configMotionCruiseVelocity(200);
+    m_armLeaderMotor.configMotionAcceleration(500);
 
     // Configure follower motor
     m_armPivotFollower.configFactoryDefault();
@@ -66,10 +77,37 @@ public class ArmSubsystem extends SubsystemBase {
         LimitSwitchSource.FeedbackConnector, 
         LimitSwitchNormal.NormallyOpen
     );
+
+    // Tuning PID Constants
+    double ku = 0;
+    double tu = 0;
+    double[] pidConstants = util.setZieglerNicholsConstants(ku, tu);
+
+    // Set PID Constants
+    m_armLeaderMotor.config_kP(0, pidConstants[0]);
+    m_armLeaderMotor.config_kI(0, pidConstants[1]);
+    m_armLeaderMotor.config_kD(0, pidConstants[2]);
   }
 
   public void setPower(double power) {
     m_armLeaderMotor.set(power);
+  }
+
+  public void setSetpoint(double setpoint) {
+    m_setpoint = setpoint;
+    m_armLeaderMotor.set(ControlMode.Position, setpoint);
+  }
+
+  public boolean atSetpoint() {
+    return Math.abs(getAngle() - m_setpoint) < ArmConstants.PositionTolerance;
+  }
+
+  public void usePIDOutput() {
+    // Use PID output to set motor power
+    m_armLeaderMotor.set(
+        ControlMode.Position,
+        m_setpoint
+    );
   }
 
   public double getAngle() {
@@ -95,10 +133,14 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // Update SmartDashboard
+ 
   }
 
   @Override
   public void simulationPeriodic() {
     // Add simulation code here if needed
+
   }
 }
