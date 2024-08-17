@@ -1,0 +1,49 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon SRX[21]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Analog In": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Pulse Width Input": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Victor SPX[16]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
