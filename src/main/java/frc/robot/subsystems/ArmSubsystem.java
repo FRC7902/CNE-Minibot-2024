@@ -53,7 +53,6 @@ public class ArmSubsystem extends SubsystemBase {
     //m_driveSubsystem = drive;    
 
     configureMotors();
-
   }
 
   private void configureMotors() {
@@ -104,9 +103,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void usePIDOutput() {
     // Use PID output to set motor power
-    m_armLeaderMotor.set(
-        ControlMode.Position,
-        m_setpoint
+    m_armLeaderMotor.set(ControlMode.Position, m_setpoint
     );
   }
 
@@ -135,6 +132,8 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // Update SmartDashboard
+    SmartDashboard.putNumber("Arm Angle", getAngle());
+    SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
  
   }
 
