@@ -73,6 +73,10 @@ public class ArmSubsystem extends SubsystemBase {
     m_armPivotFollower.follow(m_armLeaderMotor);
     m_armPivotFollower.setInverted(InvertType.FollowMaster);
 
+    m_armLeaderMotor.configVoltageCompSaturation(12,0);  // 12V
+    m_armLeaderMotor.configPeakCurrentLimit(45);                      // 45A 
+    m_armLeaderMotor.configNeutralDeadband(0.04);          // 4% deadband
+
     // Configure limit switch
     m_armLeaderMotor.configForwardLimitSwitchSource(
         LimitSwitchSource.FeedbackConnector, 
