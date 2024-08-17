@@ -38,8 +38,19 @@ public class ArmSubsystem extends SubsystemBase {
   private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
   private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
   
-  // Simulation objects
-  /* private final SingleJointedArmSim m_armSim = new SingleJointedArmSim()
+  /** Object of a simulated arm */
+  /*private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
+  //    DCMotor gearbox - 2
+  //    double gearing
+  //    double jKgMetersSquared
+  //    double armLengthMeters
+  //    double minAngleRads
+  //    double maxAngleRads
+  //    boolean simulateGravity - true
+  //    double startingAngleRads
+  );*/
+
+  /* 
   private final Mechanism2d m_mech2d;
   private final MechanismLigament2d m_armLigament;
   private final TalonSRXSimCollection m_armLeaderMotorSim; */
