@@ -91,11 +91,18 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftFollowerMotor.follow(m_leftLeaderMotor);
     m_rightFollowerMotor.follow(m_rightLeaderMotor);
 
-    // Sets the current limit of the motors to 45 amps to prevent overheating
-    m_leftLeaderMotor.setSmartCurrentLimit(45);
-    m_rightLeaderMotor.setSmartCurrentLimit(45);
-    m_leftFollowerMotor.setSmartCurrentLimit(45);
-    m_rightFollowerMotor.setSmartCurrentLimit(45);
+    // This code limits the motor current to 40 amps to prevent overheating
+
+    int rpm=3000;
+    int peakCurrent=70;
+    int continuousCurrent=40;
+
+    m_leftLeaderMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
+    m_rightLeaderMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
+    m_leftFollowerMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
+    m_rightFollowerMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
+
+
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
@@ -121,12 +128,6 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // This code limits the motor current to 40 amps to prevent overheating
-
-    m_leftLeaderMotor.setSmartCurrentLimit(70,40,3000);
-    m_rightLeaderMotor.setSmartCurrentLimit(70,40,3000);
-    m_leftFollowerMotor.setSmartCurrentLimit(70,40,3000);
-    m_rightFollowerMotor.setSmartCurrentLimit(70,40,3000);
 
 
 
