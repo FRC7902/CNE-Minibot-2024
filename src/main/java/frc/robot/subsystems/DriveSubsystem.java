@@ -73,10 +73,10 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // This code limits the motor current to 80 amps to prevent overheating
 
-    m_leftLeaderMotor.setSmartCurrentLimit(50);
-    m_rightLeaderMotor.setSmartCurrentLimit(50);
-    m_leftFollowerMotor.setSmartCurrentLimit(50);
-    m_rightFollowerMotor.setSmartCurrentLimit(50);
+    m_leftLeaderMotor.setSmartCurrentLimit(45);
+    m_rightLeaderMotor.setSmartCurrentLimit(45);
+    m_leftFollowerMotor.setSmartCurrentLimit(45);
+    m_rightFollowerMotor.setSmartCurrentLimit(45);
 
   }
 }

@@ -25,7 +25,7 @@ public class CurvatureDrive extends Command {
     double moveSpeed = ((frc.robot.RobotContainer.m_driverController.getLeftY()) * 0.5);
     double rotateSpeed = ((frc.robot.RobotContainer.m_driverController.getRightX()) * 0.5);
 
-    frc.robot.RobotContainer.m_driveSubsystem.curvatureDrive(moveSpeed, rotateSpeed);
+    frc.robot.RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
 
   }
 

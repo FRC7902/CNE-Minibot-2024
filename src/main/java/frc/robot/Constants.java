@@ -16,10 +16,10 @@ public final class Constants {
   public static class DriveConstants {
 
     //Motor IDs, currently not the correct IDs, will change later.
-    public static final int leftBackCAN = 36;
-    public static final int leftFrontCAN = 37;
-    public static final int rightBackCAN = 38;
-    public static final int rightFrontCAN = 39;
+    public static final int leftBackCAN = 32;
+    public static final int leftFrontCAN = 31;
+    public static final int rightBackCAN = 33;
+    public static final int rightFrontCAN = 34;
   }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
