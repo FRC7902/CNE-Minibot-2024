@@ -14,7 +14,6 @@ package frc.robot;
  */
 public final class Constants {
   public static class DriveConstants {
-
     // Multiplier for the speed of the robot
     public static final double driveSpeedMultiplier = 0.5;
 
@@ -23,6 +22,11 @@ public final class Constants {
     public static final int leftFrontCAN = 31;
     public static final int rightBackCAN = 33;
     public static final int rightFrontCAN = 34;
+
+    // Motor current limit to prevent overheating
+    public static final int rpm=3000;
+    public static final int peakCurrent=70;
+    public static final int continuousCurrent=40;
   }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

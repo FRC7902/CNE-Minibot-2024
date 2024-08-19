@@ -49,19 +49,19 @@ public class DriveSubsystem extends SubsystemBase {
     rightSpeedPID.setI(0.0);
   }
 
-  double DriveDistance=0.0; //Allows setDistanceToDrive to accept an argument
+ //Allows setDistanceToDrive to accept an argument
   public void setDistanceToDrive(double DriveDistance){
 
-    this.DriveDistance=DriveDistance;
     rightSpeedPID.setReference(DriveDistance,com.revrobotics.CANSparkBase.ControlType.kPosition);
     leftSpeedPID.setReference(DriveDistance,com.revrobotics.CANSparkBase.ControlType.kPosition);  
 
   }
   
-  public void setPoint(){
+  public void setVelocity(){
     //Setpoints for the PID system
-    rightSpeedPID.setReference(0,com.revrobotics.CANSparkBase.ControlType.kVelocity);
-    leftSpeedPID.setReference(0,com.revrobotics.CANSparkBase.ControlType.kVelocity);
+    double velocity=0.0;
+    rightSpeedPID.setReference(velocity,com.revrobotics.CANSparkBase.ControlType.kVelocity);
+    leftSpeedPID.setReference(velocity,com.revrobotics.CANSparkBase.ControlType.kVelocity);
   }
 
 
@@ -93,14 +93,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     // This code limits the motor current to 40 amps to prevent overheating
 
-    int rpm=3000;
-    int peakCurrent=70;
-    int continuousCurrent=40;
 
-    m_leftLeaderMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
-    m_rightLeaderMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
-    m_leftFollowerMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
-    m_rightFollowerMotor.setSmartCurrentLimit(peakCurrent,continuousCurrent,rpm);
+    m_leftLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+    m_rightLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+    m_leftFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+    m_rightFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
 
 
   }
@@ -110,14 +107,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   
-  public void pidControlObjects() {
-    //Sets the speed of motors based on the PID control 
-
-    m_leftLeaderMotor.set(leftSpeedPID.getOutputMax());
-    m_rightLeaderMotor.set(rightSpeedPID.getOutputMax());
-    m_leftFollowerMotor.set(leftSpeedPID.getOutputMax());
-    m_rightFollowerMotor.set(rightSpeedPID.getOutputMax());
-  }
   //it controls the range of output of the PID controller
   public void pidOutputRange(){
     leftSpeedPID.setOutputRange(0.0,0.0);
