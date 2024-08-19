@@ -41,11 +41,15 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
 
+<<<<<<< HEAD
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+=======
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+>>>>>>> 3cc8ed5 (sim)
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -71,7 +75,6 @@ public class RobotContainer {
     // Arm-related commands
     new JoystickButton(m_operatorStick, IOConstants.kY).whileTrue(new MoveArmUpCmd(m_armSubsystem));
     new JoystickButton(m_operatorStick, IOConstants.kA).whileTrue(new MoveArmDownCmd(m_armSubsystem));
-
     new JoystickButton(m_operatorStick, IOConstants.kB).whileTrue(new BaseSetpoint(m_armSubsystem));
     new JoystickButton(m_operatorStick, IOConstants.kX).whileTrue(new RaisedSetpoint(m_armSubsystem));
 

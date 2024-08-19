@@ -38,19 +38,25 @@ public final class Constants {
     public static final double EncoderToOutputRatio = 2.05;
 
     // PID Gains
-    public static final double kP = 1.0;
+    public static final double kP = 0.1;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
     // Setpoints in degrees
     public static final double BaseSetpoint = 0.0;
     public static final double RaisedSetpoint = 45.0;
+    public static final double PositionTolerance = 5;   // 5 degrees
+
 
     public static final double GearRatio = 1.0 / 10.0;
 
     public static final double MaxAngle = 90;    
 
-    public static final double PositionTolerance = 5;   // 5 degrees
+
+    // Feedforward
+    public static final double ks = 0;  // Static gain
+    public static final double kg = 0;  // Gravity gain
+    public static final double kv = 0;  // Velocity gain
   }
 
   public static class IOConstants { 

@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -32,40 +34,48 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
-  private final static ArmUtils util = new ArmUtils();
   
+  //private final DriveSubsystem m_driveSubsystem;
+  private final static ArmUtils util = new ArmUtils();
+
   // Declare motor controllers
   private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
   private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
-  
-  /** Object of a simulated arm */
-  /*private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
-  //    DCMotor gearbox - 2
-  //    double gearing
-  //    double jKgMetersSquared
-  //    double armLengthMeters
-  //    double minAngleRads
-  //    double maxAngleRads
-  //    boolean simulateGravity - true
-  //    double startingAngleRads
-  );*/
-
-  /* 
-  private final Mechanism2d m_mech2d;
-  private final MechanismLigament2d m_armLigament;
-  private final TalonSRXSimCollection m_armLeaderMotorSim; */
 
   private double m_setpoint = 0;
-
+  public static double adjuested_feedFwd;
   private static boolean isLimitSwitchMuted = false;
 
-  //private final DriveSubsystem m_driveSubsystem;
+  /** Object of a simulated arm **/
+  private final SingleJointedArmSim armSim = new SingleJointedArmSim(
+      DCMotor.getCIM(2),
+      139.78,
+      6.05,
+      1,
+      -Math.PI * 20,
+      Math.PI * 20,
+      true,
+      0);
 
+  // Intialize SRX simulation
+  private final TalonSRXSimCollection m_armLeaderMotorSim = new TalonSRXSimCollection(m_armLeaderMotor);
+
+  // Mechanism2d for visualization
+  private final Mechanism2d mech = new Mechanism2d(3, 6);
+  private final MechanismRoot2d m_armPivot = mech.getRoot("ArmPivot", 1.5, 0);
+  private final MechanismLigament2d m_arm = m_armPivot.append(new MechanismLigament2d(
+    "Arm",
+    1,  
+    armSim.getAngleRads(), 
+    6,
+    new Color8Bit(Color.kPurple))
+);
+  
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {    
     //m_driveSubsystem = drive;    
-
     configureMotors();
+    configurePID();
   }
 
   private void configureMotors() {
@@ -93,7 +103,9 @@ public class ArmSubsystem extends SubsystemBase {
         LimitSwitchSource.FeedbackConnector, 
         LimitSwitchNormal.NormallyOpen
     );
+  }
 
+  public void configurePID() {
     // Tuning PID Constants
     double ku = 0;
     double tu = 0;
@@ -152,13 +164,23 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (DriverStation.isDisabled()) {
+      setSetpoint(0);
+    }
+
+
+    if (m_armLeaderMotor.isFwdLimitSwitchClosed() == 1 && !isLimitSwitchMuted) {
+      // Reset arm encoder
+      m_armLeaderMotor.getSensorCollection().setQuadraturePosition(0, 1);
+
+    }
 
     // Update SmartDashboard
     SmartDashboard.putNumber("Arm Angle: ", getAngle());
     SmartDashboard.putNumber("Arm Setpoint: ", m_setpoint);
-
     SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
- 
+    SmartDashboard.putBoolean("Arm Limit Switch", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
+
   }
 
   @Override
