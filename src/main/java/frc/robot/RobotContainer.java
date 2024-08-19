@@ -32,10 +32,6 @@ public class RobotContainer {
   // Controllers
   private final XboxController m_operatorStick = new XboxController(1);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -56,7 +52,6 @@ public class RobotContainer {
     // Arm-related commands
     new JoystickButton(m_operatorStick, IOConstants.kY).whileTrue(new MoveArmUpCmd(m_armSubsystem));
     new JoystickButton(m_operatorStick, IOConstants.kA).whileTrue(new MoveArmDownCmd(m_armSubsystem));
-
     new JoystickButton(m_operatorStick, IOConstants.kB).whileTrue(new BaseSetpoint(m_armSubsystem));
     new JoystickButton(m_operatorStick, IOConstants.kX).whileTrue(new RaisedSetpoint(m_armSubsystem));
 
