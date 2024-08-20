@@ -7,14 +7,12 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.wpilibj.XboxController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
-  /** Creates a new DriveSubsystem. */
 
   // Left Motors
   private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
@@ -29,8 +27,8 @@ public class DriveSubsystem extends SubsystemBase {
       CANSparkMax.MotorType.kBrushless);
 
   // Allows interfacing with the integrated PID Controller on the motors.
-  private final SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
-  private final SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
+  private final SparkPIDController m_leftPID = m_leftLeaderMotor.getPIDController();
+  private final SparkPIDController m_rightPID = m_rightLeaderMotor.getPIDController();
 
   // Instantiates the DifferentialDrive class and the XboxController class
   public final DifferentialDrive m_drive;
@@ -39,9 +37,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
 
+  /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    //
-
     // Ensures motors are loaded with the current config, not with a previous
     // config.
     m_leftLeaderMotor.restoreFactoryDefaults();
@@ -59,8 +56,14 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftFollowerMotor.follow(m_leftLeaderMotor);
     m_rightFollowerMotor.follow(m_rightLeaderMotor);
 
-    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+    // Sets the current limit of the motors to 45 amps to prevent overheating
+    m_leftLeaderMotor.setSmartCurrentLimit(45);
+    m_rightLeaderMotor.setSmartCurrentLimit(45);
+    m_leftFollowerMotor.setSmartCurrentLimit(45);
+    m_rightFollowerMotor.setSmartCurrentLimit(45);
 
+    // Initialize the DifferentialDrive class with the left and right leader motors
+    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
@@ -69,14 +72,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
     // This method will be called once per scheduler run
-    // This code limits the motor current to 80 amps to prevent overheating
-
-    m_leftLeaderMotor.setSmartCurrentLimit(45);
-    m_rightLeaderMotor.setSmartCurrentLimit(45);
-    m_leftFollowerMotor.setSmartCurrentLimit(45);
-    m_rightFollowerMotor.setSmartCurrentLimit(45);
-
   }
 }

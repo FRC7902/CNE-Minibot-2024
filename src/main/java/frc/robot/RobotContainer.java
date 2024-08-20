@@ -7,11 +7,9 @@ package frc.robot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.CurvatureDrive;
+import frc.robot.commands.CurvatureDriveCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -41,7 +39,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    m_driveSubsystem.setDefaultCommand(new CurvatureDrive());
   }
 
   /**
@@ -67,6 +64,8 @@ public class RobotContainer {
     // pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
   }
 
   /**

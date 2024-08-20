@@ -5,13 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
 
-public class CurvatureDrive extends Command {
+public class CurvatureDriveCommand extends Command {
   /** Creates a new CurvatureDrive. */
-  public CurvatureDrive() {
-    addRequirements(frc.robot.RobotContainer.m_driveSubsystem);
+  public CurvatureDriveCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(frc.robot.RobotContainer.m_driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +25,6 @@ public class CurvatureDrive extends Command {
     double rotateSpeed = ((frc.robot.RobotContainer.m_driverController.getRightX()) * 0.5);
 
     frc.robot.RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
-
   }
 
   // Called once the command ends or is interrupted.
