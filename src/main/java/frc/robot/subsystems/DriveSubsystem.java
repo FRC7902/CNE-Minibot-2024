@@ -39,6 +39,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    configurueMotors();
+
+    // Initialize the DifferentialDrive class with the left and right leader motors
+    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+  }
+
+  private void configurueMotors() {
     // Ensures motors are loaded with the current config, not with a previous
     // config.
     m_leftLeaderMotor.restoreFactoryDefaults();
@@ -61,9 +68,6 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightLeaderMotor.setSmartCurrentLimit(45);
     m_leftFollowerMotor.setSmartCurrentLimit(45);
     m_rightFollowerMotor.setSmartCurrentLimit(45);
-
-    // Initialize the DifferentialDrive class with the left and right leader motors
-    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
