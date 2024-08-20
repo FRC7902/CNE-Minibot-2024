@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.RobotContainer;
 
 public class CurvatureDriveCommand extends Command {
   /** Creates a new CurvatureDrive. */
@@ -22,10 +23,10 @@ public class CurvatureDriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveSpeed = ((frc.robot.RobotContainer.m_driverController.getLeftY()) * DriveConstants.driveSpeedMultiplier);
-    double rotateSpeed = ((frc.robot.RobotContainer.m_driverController.getRightX()) * DriveConstants.driveSpeedMultiplier));
+    double moveSpeed = ((RobotContainer.m_driverController.getLeftY()) * DriveConstants.driveSpeedMultiplier);
+    double rotateSpeed = ((RobotContainer.m_driverController.getRightX()) * DriveConstants.driveSpeedMultiplier);
 
-    frc.robot.RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
+    RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
   }
 
   // Called once the command ends or is interrupted.
