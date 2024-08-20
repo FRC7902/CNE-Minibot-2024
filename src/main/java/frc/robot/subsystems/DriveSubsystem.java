@@ -25,7 +25,38 @@ public class DriveSubsystem extends SubsystemBase {
       CANSparkMax.MotorType.kBrushless);
   private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.rightBackCAN,
       CANSparkMax.MotorType.kBrushless);
-
+      public DriveSubsystem() {
+        //
+    
+        // Ensures motors are loaded with the current config, not with a previous
+        // config.
+        m_leftLeaderMotor.restoreFactoryDefaults();
+        m_leftFollowerMotor.restoreFactoryDefaults();
+        m_rightLeaderMotor.restoreFactoryDefaults();
+        m_rightFollowerMotor.restoreFactoryDefaults();
+    
+        // Inverts the leader motor of each side so that the motors aren't going against
+        // each other
+        m_leftLeaderMotor.setInverted(true);
+        m_rightLeaderMotor.setInverted(true);
+    
+        // Any updates made to the Leader Motor will additionally be made to the
+        // Follower Motor, even without directly updating the Follower Motor
+        m_leftFollowerMotor.follow(m_leftLeaderMotor);
+        m_rightFollowerMotor.follow(m_rightLeaderMotor);
+    
+        m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+        
+    
+    
+        m_leftLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+        m_rightLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+        m_leftFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+        m_rightFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
+    
+    
+      }
+    
   // Allows interfacing with the integrated PID Controller on the motors.
   // PID contoller objects
   private final SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
@@ -57,50 +88,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
   
-  public void setVelocity(){
+  public void setVelocity(double velocity){
     //Setpoints for the PID system
-    double velocity=0.0;
+    
     rightSpeedPID.setReference(velocity,com.revrobotics.CANSparkBase.ControlType.kVelocity);
     leftSpeedPID.setReference(velocity,com.revrobotics.CANSparkBase.ControlType.kVelocity);
   }
 
 
-  /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
-    configurueMotors();
-
-    // Initialize the DifferentialDrive class with the left and right leader motors
-    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
-  }
-
-  private void configurueMotors() {
-    // Ensures motors are loaded with the current config, not with a previous
-    // config.
-    m_leftLeaderMotor.restoreFactoryDefaults();
-    m_leftFollowerMotor.restoreFactoryDefaults();
-    m_rightLeaderMotor.restoreFactoryDefaults();
-    m_rightFollowerMotor.restoreFactoryDefaults();
-
-    // Inverts the leader motor of each side so that the motors aren't going against
-    // each other
-    m_leftLeaderMotor.setInverted(true);
-    m_rightLeaderMotor.setInverted(true);
-
-    // Any updates made to the Leader Motor will additionally be made to the
-    // Follower Motor, even without directly updating the Follower Motor
-    m_leftFollowerMotor.follow(m_leftLeaderMotor);
-    m_rightFollowerMotor.follow(m_rightLeaderMotor);
-
-    // This code limits the motor current to 40 amps to prevent overheating
-
-
-    m_leftLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
-    m_rightLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
-    m_leftFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
-    m_rightFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent,DriveConstants.continuousCurrent,DriveConstants.rpm);
-
-
-  }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
