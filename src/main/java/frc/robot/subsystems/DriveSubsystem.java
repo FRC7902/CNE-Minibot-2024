@@ -15,13 +15,13 @@ import frc.robot.Constants.DriveConstants;
 public class DriveSubsystem extends SubsystemBase {
 
   // Left Motors
-  private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
+  private final static CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
       CANSparkMax.MotorType.kBrushless);
   private final CANSparkMax m_leftFollowerMotor = new CANSparkMax(DriveConstants.leftFrontCAN,
       CANSparkMax.MotorType.kBrushless);
 
   // Right Motors
-  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.rightFrontCAN,
+  private final static CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.rightFrontCAN,
       CANSparkMax.MotorType.kBrushless);
   private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.rightBackCAN,
       CANSparkMax.MotorType.kBrushless);
@@ -58,9 +58,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
     
   // Allows interfacing with the integrated PID Controller on the motors.
-  // PID contoller objects
-  private final SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
-  private final SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
+  // PID contoller objects 
+  private final static SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
+  private final static SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
 
   // Instantiates the DifferentialDrive class and the XboxController class
   public final DifferentialDrive m_drive;
@@ -90,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
   
-  public void setVelocity(double velocity){
+  public static void setVelocity(double velocity){
     //Setpoints for the PID system
     
     rightSpeedPID.setReference(velocity,com.revrobotics.CANSparkBase.ControlType.kVelocity);
