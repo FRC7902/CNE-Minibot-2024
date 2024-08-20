@@ -15,7 +15,10 @@ package frc.robot;
 public final class Constants {
   public static class DriveConstants {
 
-    //Motor IDs, currently not the correct IDs, will change later.
+    // Multiplier for the speed of the robot
+    public static final double driveSpeedMultiplier = 0.5;
+
+    // Motor Controller CAN IDs
     public static final int leftBackCAN = 32;
     public static final int leftFrontCAN = 31;
     public static final int rightBackCAN = 33;
