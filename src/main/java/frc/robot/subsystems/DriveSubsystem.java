@@ -40,6 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     configurueMotors();
+    setPIDGains();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
