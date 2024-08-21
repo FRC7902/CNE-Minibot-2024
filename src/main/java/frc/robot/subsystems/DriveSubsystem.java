@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     configureMotors();
-    setPIDGains();
+    configurePID();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollowerMotor.setSmartCurrentLimit(45);
   }
 
-  private void setPIDGains() {
+  private void configurePID() {
     m_leftPID.setP(0.0); // Integral, derivative, and proportional gains for the PID controller
     m_leftPID.setD(0.0);
     m_leftPID.setI(0.0);
