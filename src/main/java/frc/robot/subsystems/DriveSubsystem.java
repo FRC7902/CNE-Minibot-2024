@@ -27,8 +27,6 @@ public class DriveSubsystem extends SubsystemBase {
       CANSparkMax.MotorType.kBrushless);
 
   public DriveSubsystem() {
-    //
-
     // Ensures motors are loaded with the current config, not with a previous
     // config.
     m_leftLeaderMotor.restoreFactoryDefaults();
@@ -57,6 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent, DriveConstants.continuousCurrent,
         DriveConstants.rpm);
 
+    setPIDGains();
   }
 
   // Allows interfacing with the integrated PID Controller on the motors.
@@ -71,7 +70,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
 
-  private void setPidGains() {
+  private void setPIDGains() {
     leftSpeedPID.setP(0.0); // Integral, derivative, and proportional gains for the PID controller
     leftSpeedPID.setD(0.0);
     leftSpeedPID.setI(0.0);
