@@ -39,13 +39,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    configurueMotors();
+    configureMotors();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
   }
 
-  private void configurueMotors() {
+  private void configureMotors() {
     // Ensures motors are loaded with the current config, not with a previous
     // config.
     m_leftLeaderMotor.restoreFactoryDefaults();
