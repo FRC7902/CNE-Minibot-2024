@@ -15,18 +15,37 @@ import frc.robot.Constants.DriveConstants;
 public class DriveSubsystem extends SubsystemBase {
 
   // Left Motors
-  private final static CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
+  private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
       CANSparkMax.MotorType.kBrushless);
   private final CANSparkMax m_leftFollowerMotor = new CANSparkMax(DriveConstants.leftFrontCAN,
       CANSparkMax.MotorType.kBrushless);
 
   // Right Motors
-  private final static CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.rightFrontCAN,
+  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.rightFrontCAN,
       CANSparkMax.MotorType.kBrushless);
   private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.rightBackCAN,
       CANSparkMax.MotorType.kBrushless);
 
+  // Allows interfacing with the integrated PID Controller on the motors.
+  private final SparkPIDController m_leftPID = m_leftLeaderMotor.getPIDController();
+  private final SparkPIDController m_rightPID = m_rightLeaderMotor.getPIDController();
+
+  // Instantiates the DifferentialDrive class and the XboxController class
+  public final DifferentialDrive m_drive;
+
+  // ENCODER DECLARATION
+  private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
+  private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
+
+  /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    configurueMotors();
+
+    // Initialize the DifferentialDrive class with the left and right leader motors
+    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+  }
+
+  private void configurueMotors() {
     // Ensures motors are loaded with the current config, not with a previous
     // config.
     m_leftLeaderMotor.restoreFactoryDefaults();
@@ -44,55 +63,34 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftFollowerMotor.follow(m_leftLeaderMotor);
     m_rightFollowerMotor.follow(m_rightLeaderMotor);
 
-    m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
-
-    m_leftLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent, DriveConstants.continuousCurrent,
-        DriveConstants.rpm);
-    m_rightLeaderMotor.setSmartCurrentLimit(DriveConstants.peakCurrent, DriveConstants.continuousCurrent,
-        DriveConstants.rpm);
-    m_leftFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent, DriveConstants.continuousCurrent,
-        DriveConstants.rpm);
-    m_rightFollowerMotor.setSmartCurrentLimit(DriveConstants.peakCurrent, DriveConstants.continuousCurrent,
-        DriveConstants.rpm);
-
-    setPIDGains();
+    // Sets the current limit of the motors to 45 amps to prevent overheating
+    m_leftLeaderMotor.setSmartCurrentLimit(45);
+    m_rightLeaderMotor.setSmartCurrentLimit(45);
+    m_leftFollowerMotor.setSmartCurrentLimit(45);
+    m_rightFollowerMotor.setSmartCurrentLimit(45);
   }
 
-  // Allows interfacing with the integrated PID Controller on the motors.
-  // PID contoller objects
-  private final static SparkPIDController leftSpeedPID = m_leftLeaderMotor.getPIDController();
-  private final static SparkPIDController rightSpeedPID = m_rightLeaderMotor.getPIDController();
-
-  // Instantiates the DifferentialDrive class and the XboxController class
-  public final DifferentialDrive m_drive;
-
-  // ENCODER DECLARATION
-  private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
-  private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
-
   private void setPIDGains() {
-    leftSpeedPID.setP(0.0); // Integral, derivative, and proportional gains for the PID controller
-    leftSpeedPID.setD(0.0);
-    leftSpeedPID.setI(0.0);
+    m_leftPID.setP(0.0); // Integral, derivative, and proportional gains for the PID controller
+    m_leftPID.setD(0.0);
+    m_leftPID.setI(0.0);
 
-    rightSpeedPID.setP(0.0);
-    rightSpeedPID.setD(0.0);
-    rightSpeedPID.setI(0.0);
+    m_rightPID.setP(0.0);
+    m_rightPID.setD(0.0);
+    m_rightPID.setI(0.0);
   }
 
   // Allows setDistanceToDrive to accept an argument
   public void setDistanceToDrive(double DriveDistance) {
-
-    rightSpeedPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
-    leftSpeedPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
+    m_rightPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
+    m_leftPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
 
   }
 
-  public static void setVelocity(double velocity) {
-    // Setpoints for the PID system
-
-    rightSpeedPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
-    leftSpeedPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
+  // Setpoints for the PID system
+  public void setVelocity(double velocity) {
+    m_rightPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
+    m_leftPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
@@ -101,8 +99,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // it controls the range of output of the PID controller
   public void pidOutputRange() {
-    leftSpeedPID.setOutputRange(0.0, 0.0);
-    rightSpeedPID.setOutputRange(0.0, 0.0);
+    m_leftPID.setOutputRange(0.0, 0.0);
+    m_rightPID.setOutputRange(0.0, 0.0);
   }
 
   @Override
