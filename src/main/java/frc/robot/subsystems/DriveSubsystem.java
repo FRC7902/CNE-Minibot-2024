@@ -103,12 +103,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void pidOutputRange() {
     leftSpeedPID.setOutputRange(0.0, 0.0);
     rightSpeedPID.setOutputRange(0.0, 0.0);
-
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
   }
 }
