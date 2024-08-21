@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.RobotContainer;
 
 public class SetVelocityCommand extends Command {
   /** Creates a new SetVelocityCommand. */
@@ -13,8 +13,8 @@ public class SetVelocityCommand extends Command {
 
 
   public SetVelocityCommand() {
-    addRequirements();
-    DriveSubsystem.setVelocity(0.0);
+    addRequirements(RobotContainer.m_driveSubsystem);
+    RobotContainer.m_driveSubsystem.setVelocity(0.0);
     // Use addRequirements() here to declare subsystem dependencies.
     
   }
