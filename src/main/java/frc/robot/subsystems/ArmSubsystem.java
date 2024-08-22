@@ -13,9 +13,6 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,43 +27,41 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.ArmUtils;
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
-  
-  //private final DriveSubsystem m_driveSubsystem;
-  private final static ArmUtils util = new ArmUtils();
 
   // Declare motor controllers
   private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
   private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
 
+  //private final DriveSubsystem m_driveSubsystem;
+  private final static ArmUtils util = new ArmUtils();
   private double m_setpoint = 0;
-  public static double adjuested_feedFwd;
   private static boolean isLimitSwitchMuted = false;
+  private static double adjusted_feedforward;
 
   /** Object of a simulated arm **/
   private final SingleJointedArmSim armSim = new SingleJointedArmSim(
       DCMotor.getCIM(2),
       139.78,
-      6.05,
-      1,
-      -Math.PI * 20,
-      Math.PI * 20,
+      0.0035,  // Moment of intertia
+      0.639,   // 0.3193m*2
+      0,
+      Math.PI,
       true,
       0);
 
   // Intialize SRX simulation
   private final TalonSRXSimCollection m_armLeaderMotorSim = new TalonSRXSimCollection(m_armLeaderMotor);
 
-  // Mechanism2d for visualization
-  private final Mechanism2d mech = new Mechanism2d(3, 6);
-  private final MechanismRoot2d m_armPivot = mech.getRoot("ArmPivot", 1.5, 0);
-  private final MechanismLigament2d m_arm = m_armPivot.append(new MechanismLigament2d(
+  // Create a Mechanism2d visual display for the arm 
+  private final Mechanism2d m_mech2d = new Mechanism2d(3, 3);
+  private final MechanismRoot2d m_armRoot = m_mech2d.getRoot("ArmPivot", 1.5, 0);
+  private final MechanismLigament2d m_armPivot = m_armRoot.append(new MechanismLigament2d(
     "Arm",
-    1,  
-    armSim.getAngleRads(), 
+    0.639,                     
+    Units.radiansToDegrees(armSim.getAngleRads()),  // In degrees
     6,
     new Color8Bit(Color.kPurple))
 );
@@ -76,6 +71,11 @@ public class ArmSubsystem extends SubsystemBase {
     //m_driveSubsystem = drive;    
     configureMotors();
     configurePID();
+
+    if (RobotBase.isSimulation()) {
+      // Add the arm to the Mechanism2d display
+      SmartDashboard.putData("Arm", m_mech2d);
+    }
   }
 
   private void configureMotors() {
@@ -83,11 +83,14 @@ public class ArmSubsystem extends SubsystemBase {
     m_armLeaderMotor.configFactoryDefault();
     m_armLeaderMotor.setSensorPhase(true);
     m_armLeaderMotor.setInverted(true);
-    m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+    m_armLeaderMotor.configSelectedFeedbackSensor(
+      FeedbackDevice.CTRE_MagEncoder_Relative,  // Quadrature encoder
+      0,
+      0);
 
     // Set velocity and acceleration of motors
-    m_armLeaderMotor.configMotionCruiseVelocity(200);
-    m_armLeaderMotor.configMotionAcceleration(500);
+    m_armLeaderMotor.configMotionCruiseVelocity(200);       // Adjust  
+    m_armLeaderMotor.configMotionAcceleration(500);   // Adjust 
 
     // Configure follower motor
     m_armPivotFollower.configFactoryDefault();
@@ -95,14 +98,11 @@ public class ArmSubsystem extends SubsystemBase {
     m_armPivotFollower.setInverted(InvertType.FollowMaster);
 
     m_armLeaderMotor.configVoltageCompSaturation(12,0);  // 12V
-    m_armLeaderMotor.configPeakCurrentLimit(45);                      // 45A 
-    m_armLeaderMotor.configNeutralDeadband(0.04);          // 4% deadband
+    m_armLeaderMotor.configPeakCurrentLimit(45);         // 45A 
+    m_armLeaderMotor.configNeutralDeadband(0.04);        // 4% deadband
 
     // Configure limit switch
-    m_armLeaderMotor.configForwardLimitSwitchSource(
-        LimitSwitchSource.FeedbackConnector, 
-        LimitSwitchNormal.NormallyOpen
-    );
+    m_armLeaderMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
   }
 
   public void configurePID() {
@@ -133,14 +133,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void usePIDOutput() {
     // Use PID output to set motor power
-    m_armLeaderMotor.set(ControlMode.Position, m_setpoint);
+    m_armLeaderMotor.set(ControlMode.Position, util.degToCTRESensorUnits(m_setpoint, 0));
   }
 
   public double getAngle() {
     // Get angle of arm in ticks (4096 per revolution) 
-    return modAngleInTicks(
-        m_armLeaderMotor.getSensorCollection().getQuadraturePosition() / ArmConstants.EncoderToOutputRatio
-    );
+    return modAngleInTicks(m_armLeaderMotor.getSensorCollection().getQuadraturePosition() / ArmConstants.EncoderToOutputRatio);
   }
 
   public double modAngleInTicks(double angleInTicks) {
@@ -154,7 +152,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean atZeroPos() {
-    return m_armLeaderMotor.isFwdLimitSwitchClosed() == 0; // Switch open
+    return m_armLeaderMotor.isFwdLimitSwitchClosed() == 0;  // Switch open
   }
 
   public void stopMotor() {
@@ -165,15 +163,17 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (DriverStation.isDisabled()) {
-      setSetpoint(0);
+      // Reset setpoint to base position
+      setSetpoint(ArmConstants.BaseSetpoint);
     }
-
 
     if (m_armLeaderMotor.isFwdLimitSwitchClosed() == 1 && !isLimitSwitchMuted) {
-      // Reset arm encoder
+      // Recalibrate arm encoder
       m_armLeaderMotor.getSensorCollection().setQuadraturePosition(0, 1);
-
     }
+
+    // Calculate feedforward
+    adjusted_feedforward = ArmConstants.ArmFeedforward * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.EncoderCPR));
 
     // Update SmartDashboard
     SmartDashboard.putNumber("Arm Angle: ", getAngle());
@@ -181,11 +181,10 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
     SmartDashboard.putBoolean("Arm Limit Switch", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
 
-  }
 
   @Override
   public void simulationPeriodic() {
     // Add simulation code here if needed
-
+   
   }
 }

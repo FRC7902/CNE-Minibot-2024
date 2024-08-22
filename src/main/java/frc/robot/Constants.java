@@ -29,15 +29,15 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    // CAN IDs for Arm Motors
+    // CAN IDs for motors
     public static final int ArmLeaderMotorCAN = 21;
     public static final int ArmFollowerMotorCAN = 16;
 
-    // Encoder Constants
+    // Encoder constants
     public static final int EncoderCPR = 4096;
     public static final double EncoderToOutputRatio = 2.05;
 
-    // PID Gains
+    // PID gains
     public static final double kP = 0.1;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
@@ -45,18 +45,14 @@ public final class Constants {
     // Setpoints in degrees
     public static final double BaseSetpoint = 0.0;
     public static final double RaisedSetpoint = 45.0;
-    public static final double PositionTolerance = 5;   // 5 degrees
-
+    public static final double PositionTolerance = 5;   
 
     public static final double GearRatio = 1.0 / 10.0;
 
     public static final double MaxAngle = 90;    
 
-
-    // Feedforward
-    public static final double ks = 0;  // Static gain
-    public static final double kg = 0;  // Gravity gain
-    public static final double kv = 0;  // Velocity gain
+    public static final double ArmFeedforward = 0.88;  // T = 8.52N*m
+    
   }
 
   public static class IOConstants { 
