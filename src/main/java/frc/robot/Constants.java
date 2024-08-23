@@ -27,5 +27,11 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class RobotConstants {
+    // Measurement of robot and certain components of it (in centimeters)
+    public static final double trackWidth = 1;
+    public static final double wheelCircumference = 47.88;
+  }
 }
 

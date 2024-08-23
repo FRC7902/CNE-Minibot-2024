@@ -34,8 +34,8 @@ public class DriveSubsystem extends SubsystemBase {
   public final DifferentialDrive m_drive;
 
   // ENCODER DECLARATION
-  private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
-  private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
+  public final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
+  public final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
