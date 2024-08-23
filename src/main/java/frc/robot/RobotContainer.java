@@ -56,8 +56,7 @@ public class RobotContainer {
     new JoystickButton(m_operatorStick, IOConstants.kX).whileTrue(new RaisedSetpoint(m_armSubsystem));
 
     // Mute limit switch when the Right D-pad is held 
-    new POVButton(m_operatorStick, 90) 
-    .whileTrue(new MuteLimitSwitch(m_armSubsystem));
+    new POVButton(m_operatorStick, 90).whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
 
   /**
