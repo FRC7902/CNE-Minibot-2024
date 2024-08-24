@@ -22,12 +22,14 @@ public class SetVelocityCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_driveSubsystem.setVelocity(1000);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    RobotContainer.m_driveSubsystem.setVelocity(1000);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

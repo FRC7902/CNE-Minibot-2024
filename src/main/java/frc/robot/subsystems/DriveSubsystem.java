@@ -73,11 +73,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void configurePID() {
-    m_leftPID.setP(0.0); // Integral, derivative, and proportional gains for the PID controller
+    m_leftPID.setP(2/5000); // Integral, derivative, and proportional gains for the PID controller
     m_leftPID.setD(0.0);
     m_leftPID.setI(0.0);
 
-    m_rightPID.setP(0.0);
+    m_rightPID.setP(2/5000);
     m_rightPID.setD(0.0);
     m_rightPID.setI(0.0);
   }
