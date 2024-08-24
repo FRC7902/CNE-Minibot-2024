@@ -36,7 +36,7 @@ public final class Constants {
     public static final double RaisedSetpoint = 45.0;
     public static final double PositionTolerance = 5;   
 
-    public static final double GearRatio = 1.0 / 10.0;
+    public static final double GearRatio = 1.0 / 10.0;  // Update
     public static final double MaxAngle = 90;    
     public static final double ArmFeedforward = 0.88;  // T = 8.52N*m
     

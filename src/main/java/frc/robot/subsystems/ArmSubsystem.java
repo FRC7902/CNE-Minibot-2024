@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.ArmUtils;
-import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -81,10 +80,9 @@ public class ArmSubsystem extends SubsystemBase {
   private void configureMotors() {
     // Configure leader motor
     m_armLeaderMotor.configFactoryDefault();
-    m_armLeaderMotor.configSelectedFeedbackSensor(
-      FeedbackDevice.CTRE_MagEncoder_Relative,  // Quadrature encoder
-      0,
-      0);
+
+    //Configure encoder
+    m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,0);
 
     // Set velocity and acceleration of motors
     m_armLeaderMotor.configMotionCruiseVelocity(200);       // Adjust  
@@ -115,7 +113,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void configurePID() {
-    // Tuning PID Constants
     /* double ku = 0;
     double tu = 0;
     double[] pidConstants = util.setZieglerNicholsConstants(ku, tu); */
@@ -191,7 +188,7 @@ public class ArmSubsystem extends SubsystemBase {
       m_armLeaderMotor.set(
         ControlMode.MotionMagic, 
         util.degToCTRESensorUnits(m_setpoint, ArmConstants.EncoderCPR), 
-        DemandType.ArbitraryFeedForward, // For gravity compensation
+        DemandType.ArbitraryFeedForward,    // For gravity compensation
         adjusted_feedforward
       );
     } else
