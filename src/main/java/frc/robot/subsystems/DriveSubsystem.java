@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -105,7 +106,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
+  public void periodic() {}
+    protected void execute() {
+      
+
+      SmartDashboard.putNumber("Encoder 1", m_leftEncoder.getVelocity());
+      SmartDashboard.putNumber("Encoder 2", m_rightEncoder.getVelocity());
     // This method will be called once per scheduler run
+  
   }
 }

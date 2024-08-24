@@ -14,14 +14,16 @@ public class SetVelocityCommand extends Command {
 
   public SetVelocityCommand() {
     addRequirements(RobotContainer.m_driveSubsystem);
-    RobotContainer.m_driveSubsystem.setVelocity(0.0);
+
     // Use addRequirements() here to declare subsystem dependencies.
     
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    RobotContainer.m_driveSubsystem.setVelocity(1000);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
