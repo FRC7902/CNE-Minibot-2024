@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -73,11 +74,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void configurePID() {
-    m_leftPID.setP(2/5000); // Integral, derivative, and proportional gains for the PID controller
+    m_leftPID.setP(0.0002); // Integral, derivative, and proportional gains for the PID controller
     m_leftPID.setD(0.0);
     m_leftPID.setI(0.0);
 
-    m_rightPID.setP(2/5000);
+    m_rightPID.setP(0.0002);
     m_rightPID.setD(0.0);
     m_rightPID.setI(0.0);
   }
@@ -86,13 +87,12 @@ public class DriveSubsystem extends SubsystemBase {
   public void setDistanceToDrive(double DriveDistance) {
     m_rightPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
     m_leftPID.setReference(DriveDistance, com.revrobotics.CANSparkBase.ControlType.kPosition);
-
   }
 
   // Setpoints for the PID system
   public void setVelocity(double velocity) {
-    m_rightPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
-    m_leftPID.setReference(velocity, com.revrobotics.CANSparkBase.ControlType.kVelocity);
+    m_rightPID.setReference(velocity, ControlType.kVelocity);
+    m_leftPID.setReference(velocity, ControlType.kVelocity);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
@@ -106,13 +106,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
-    protected void execute() {
-      
-
-      SmartDashboard.putNumber("Encoder 1", m_leftEncoder.getVelocity());
-      SmartDashboard.putNumber("Encoder 2", m_rightEncoder.getVelocity());
-    // This method will be called once per scheduler run
-  
+  public void periodic() {
+    SmartDashboard.putNumber("Encoder 1", m_leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Encoder 2", m_rightEncoder.getVelocity());
   }
 }

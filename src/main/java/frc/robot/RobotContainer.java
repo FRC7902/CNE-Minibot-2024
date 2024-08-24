@@ -66,7 +66,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
     // cancelling on release.
-    m_driverController.square().whileTrue(new SetVelocityCommand());
+    m_driverController.cross().whileTrue(new SetVelocityCommand(500));
+    m_driverController.circle().whileTrue(new SetVelocityCommand(1000));
+    m_driverController.square().whileTrue(new SetVelocityCommand(1500));
+    m_driverController.triangle().whileTrue(new SetVelocityCommand(2000));
 
     m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
   }
