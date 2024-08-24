@@ -18,8 +18,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -34,22 +34,20 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   public static final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  
   // Controllers
   public static final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
-  private final XboxController m_operatorStick = new XboxController(1);
-  private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  public static final CommandXboxController m_armController = new CommandXboxController(
+      OperatorConstants.kDriverControllerPort);
 
 
-<<<<<<< HEAD
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-=======
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
->>>>>>> 3cc8ed5 (sim)
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
@@ -73,13 +71,13 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
   
     // Arm-related commands
-    new JoystickButton(m_operatorStick, IOConstants.kY).whileTrue(new MoveArmUpCmd(m_armSubsystem));
-    new JoystickButton(m_operatorStick, IOConstants.kA).whileTrue(new MoveArmDownCmd(m_armSubsystem));
-    new JoystickButton(m_operatorStick, IOConstants.kB).whileTrue(new BaseSetpoint(m_armSubsystem));
-    new JoystickButton(m_operatorStick, IOConstants.kX).whileTrue(new RaisedSetpoint(m_armSubsystem));
+    m_armController.y().whileTrue(new MoveArmUpCmd(m_armSubsystem));
+    m_armController.a().whileTrue(new MoveArmDownCmd(m_armSubsystem));
+    m_armController.b().whileTrue(new BaseSetpoint(m_armSubsystem));
+    m_armController.x().whileTrue(new RaisedSetpoint(m_armSubsystem));
 
     // Mute limit switch when the Right D-pad is held 
-    new POVButton(m_operatorStick, 90).whileTrue(new MuteLimitSwitch(m_armSubsystem));
+    m_armController.povRight().whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
 
   /**
