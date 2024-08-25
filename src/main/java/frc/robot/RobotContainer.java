@@ -12,6 +12,7 @@ import frc.robot.commands.arm.MoveArmUpCmd;
 import frc.robot.commands.arm.MuteLimitSwitch;
 import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -25,7 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
-  public static final CommandXboxController m_armController = new CommandXboxController(
+  public static final CommandPS5Controller m_armController = new CommandPS5Controller(
       OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -46,13 +47,14 @@ public class RobotContainer {
   private void configureBindings() {
     
     // Arm-related commands
-    m_armController.y().whileTrue(new MoveArmUpCmd(m_armSubsystem));
-    m_armController.a().whileTrue(new MoveArmDownCmd(m_armSubsystem));
-    m_armController.b().whileTrue(new BaseSetpoint(m_armSubsystem));
-    m_armController.x().whileTrue(new RaisedSetpoint(m_armSubsystem));
+    m_armController.triangle().whileTrue(new MoveArmUpCmd(m_armSubsystem));
+    m_armController.cross().whileTrue(new MoveArmDownCmd(m_armSubsystem));
+    m_armController.circle().whileTrue(new BaseSetpoint(m_armSubsystem));
+    m_armController.square().whileTrue(new RaisedSetpoint(m_armSubsystem));
     // Mute limit switch when the Right D-pad is held 
     m_armController.povRight().whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
