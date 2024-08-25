@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.lang.Math;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -29,9 +31,12 @@ public final class Constants {
   }
 
   public static class RobotConstants {
-    // Measurement of robot and certain components of it (in centimeters)
-    public static final double trackWidth = 1;
-    public static final double wheelCircumference = 47.88;
+    // Measurement of robot and certain components of it (meters)
+    public static final double trackWidth = 0.6096; 
+    public static final double wheelDiameter = 0.1524;
+    public static final double encoderTicksPerRevolution = 42;
+    public static final double gearRatio = 10.71; //8.46
+  
   }
 }
 

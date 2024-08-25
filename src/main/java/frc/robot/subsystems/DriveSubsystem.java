@@ -8,9 +8,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.RobotConstants;
+
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -37,12 +42,26 @@ public class DriveSubsystem extends SubsystemBase {
   public final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   public final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
 
+  public double rightEncoderValue, leftEncoderValue;
+
+  private final DifferentialDriveKinematics m_differentialDriveKinematics = new DifferentialDriveKinematics(RobotConstants.trackWidth);
+
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     configureMotors();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+    m_leftEncoder.setPositionConversionFactor((RobotConstants.wheelDiameter * Math.PI) / RobotConstants.gearRatio);
+    m_rightEncoder.setPositionConversionFactor((RobotConstants.wheelDiameter * Math.PI) / RobotConstants.gearRatio);    
+
+    m_leftEncoder.setVelocityConversionFactor((RobotConstants.wheelDiameter * Math.PI) / (RobotConstants.gearRatio * 60));
+    m_rightEncoder.setVelocityConversionFactor((RobotConstants.wheelDiameter * Math.PI) / (RobotConstants.gearRatio * 60));
+
+    m_leftEncoder.setPosition(0);
+    m_rightEncoder.setPosition(0);
+
   }
 
   private void configureMotors() {
@@ -77,5 +96,10 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    rightEncoderValue = m_rightEncoder.getPosition();
+    leftEncoderValue = m_leftEncoder.getPosition();    
+    SmartDashboard.putNumber("right encoders", rightEncoderValue);
+    SmartDashboard.putNumber("left encoders", leftEncoderValue);
+    
   }
 }

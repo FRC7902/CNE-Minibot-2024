@@ -20,6 +20,7 @@ public class TurnAutonomously extends Command {
     final double distanceToTurn = ((RobotConstants.trackWidth) / Math.sin(angleOfRotation));
     final double originalEncoderValue = driveSubsystem.m_leftEncoder.getPosition();
 
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(frc.robot.RobotContainer.m_driveSubsystem);
   }
@@ -32,9 +33,9 @@ public class TurnAutonomously extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double rotateSpeed = 1;
+//    double rotateSpeed = 1;
 
-    RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, 0);
+//    RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, 0);
   }
 
   // Called once the command ends or is interrupted.
