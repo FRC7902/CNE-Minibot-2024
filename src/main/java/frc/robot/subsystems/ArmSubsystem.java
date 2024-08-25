@@ -92,11 +92,11 @@ public class ArmSubsystem extends SubsystemBase {
     m_armLeaderMotor.configNeutralDeadband(0.04);      
 
     if (RobotBase.isSimulation()) {
-      // Configure motors for simulation
+      // Configure motor for simulation
       m_armLeaderMotor.setSensorPhase(false);
       m_armLeaderMotor.setInverted(true);
     } else {
-      // Configure motors for real hardware
+      // Configure motor for real hardware
       m_armLeaderMotor.setSensorPhase(true);
       m_armLeaderMotor.setInverted(true);
     }
@@ -170,14 +170,14 @@ public class ArmSubsystem extends SubsystemBase {
     adjusted_feedforward = ArmConstants.ArmFeedforward * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.EncoderCPR));
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle: ", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR));
-    SmartDashboard.putNumber("Ticks", getAngle());
-    SmartDashboard.putNumber("Arm Setpoint: ", m_setpoint);
-    SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
-    SmartDashboard.putNumber("Arm Feedforward: ", adjusted_feedforward);
-    SmartDashboard.putBoolean("Arm Limit Switch: ", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
-    SmartDashboard.putBoolean("Arm Limit Switch (1): ", m_armLeaderMotor.isRevLimitSwitchClosed() == 1);
-    SmartDashboard.putNumber("Encoder Output: ", m_armLeaderMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR));
+    SmartDashboard.putNumber("Encoder ticks", getAngle());
+    SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
+    SmartDashboard.putBoolean("Limit switch muted", isLimitSwitchMuted);
+    SmartDashboard.putNumber("Arm Feedforward", adjusted_feedforward);
+    SmartDashboard.putBoolean("Arm Fwd Limit Switch", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Arm Rev Limit Switch", m_armLeaderMotor.isRevLimitSwitchClosed() == 1);
+    SmartDashboard.putNumber("Encoder Output", m_armLeaderMotor.getSupplyCurrent());
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation

@@ -18,9 +18,8 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    // CAN IDs for motors
+    // CAN IDs for motor
     public static final int ArmLeaderMotorCAN = 22;
-    public static final int ArmFollowerMotorCAN = 16;
 
     // Encoder constants
     public static final int EncoderCPR = 4096;
@@ -39,36 +38,5 @@ public final class Constants {
     public static final double GearRatio = 1.0 /3.0;  
     public static final double MaxAngle = 90;    
     public static final double ArmFeedforward = 0.88;  // T = 8.52N*m
-    
-  }
-
-  public static class IOConstants { 
-    // Joystick Ports
-    public static final int kDriverStick = 0;
-    public static final int kOperatorStick = 1;
-
-    // Joystick Buttons
-    public static final int
-        kA = 1,
-        kB = 2,
-        kX = 3,
-        kY = 4,
-        kLB = 5,
-        kRB = 6,
-        kMENU = 7,
-        kSTART = 8,
-        kLA = 9,
-        kRA = 10;
-
-    // Joystick Axis
-    public static final int
-        kLX = 0,
-        kLY = 1,
-        kLT = 2,
-        kRT = 3,
-        kRX = 4,
-        kRY = 5,
-        kDX = 6,
-        kDY = 7;
   }
 }
