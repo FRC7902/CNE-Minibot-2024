@@ -49,12 +49,12 @@ public class RobotContainer {
     // Arm-related commands
     m_armController.triangle().whileTrue(new MoveArmUpCmd(m_armSubsystem));
     m_armController.cross().whileTrue(new MoveArmDownCmd(m_armSubsystem));
-    m_armController.circle().whileTrue(new BaseSetpoint(m_armSubsystem));
-    m_armController.square().whileTrue(new RaisedSetpoint(m_armSubsystem));
+    m_armController.circle().onTrue(new BaseSetpoint(m_armSubsystem));
+    m_armController.square().onTrue(new RaisedSetpoint(m_armSubsystem));
     // Mute limit switch when the Right D-pad is held 
     m_armController.povRight().whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
-  
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

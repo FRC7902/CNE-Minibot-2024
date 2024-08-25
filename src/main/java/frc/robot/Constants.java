@@ -26,7 +26,7 @@ public final class Constants {
     public static final double EncoderToOutputRatio = 3.0;
 
     // PID gains
-    public static final double kP = 0.0002;
+    public static final double kP = 0.00002;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
@@ -35,7 +35,7 @@ public final class Constants {
     public static final double RaisedSetpoint = 45.0;
     public static final double PositionTolerance = 5;   
 
-    public static final double GearRatio = 1.0 / 3.0;  
+    public static final double GearRatio = 3.0;  
     public static final double MaxAngle = 90;    
     public static final double ArmFeedforward = 0.88;  // T = 8.52N*m
   }
