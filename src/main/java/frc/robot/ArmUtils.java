@@ -12,16 +12,16 @@ public class ArmUtils {
         return (int) (angleInRads * encoderCPR / 2 * Math.PI / ArmConstants.GearRatio);
     }
 
-    public double degToCTRESensorUnits(double angleInDeg, int encoderCPR) {
-        return (angleInDeg * ArmConstants.GearRatio * encoderCPR / 360);
+    public double CTRESensorUnitsToRads(double angleInSensorUnits, int encoderCPR) {
+        return (angleInSensorUnits * 2 * Math.PI * ArmConstants.GearRatio / encoderCPR);
+    }
+
+    public int degToCTRESensorUnits(double angleInDeg, int encoderCPR) {
+        return (int) (angleInDeg * ArmConstants.GearRatio * encoderCPR / 360);
     }
 
     public double CTRESensorUnitsToDeg(double angleInSensorUnits, int encoderCPR) {
-        return (angleInSensorUnits * 360.0 / encoderCPR * ArmConstants.GearRatio);
-    }
-
-    public double CTRESensorUnitsToRads(double angleInSensorUnits, int encoderCPR) {
-        return (angleInSensorUnits * 2 * Math.PI * ArmConstants.GearRatio / encoderCPR);
+        return (angleInSensorUnits * 360.0 / encoderCPR / ArmConstants.GearRatio);
     }
 
     // ku = ultimate gain, tu = oscillation period
