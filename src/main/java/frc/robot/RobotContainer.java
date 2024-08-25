@@ -4,22 +4,18 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.CurvatureDriveCommand;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.IOConstants;
-import frc.robot.commands.arm.BaseSetpoint;
-import frc.robot.commands.arm.RaisedSetpoint;
-import frc.robot.commands.arm.MoveArmDownCmd;
-import frc.robot.commands.arm.MoveArmUpCmd;
-import frc.robot.commands.arm.MuteLimitSwitch;
-import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CurvatureDriveCommand;
+import frc.robot.commands.arm.BaseSetpoint;
+import frc.robot.commands.arm.MoveArmDownCmd;
+import frc.robot.commands.arm.MoveArmUpCmd;
+import frc.robot.commands.arm.MuteLimitSwitch;
+import frc.robot.commands.arm.RaisedSetpoint;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -75,7 +71,6 @@ public class RobotContainer {
     m_armController.a().whileTrue(new MoveArmDownCmd(m_armSubsystem));
     m_armController.b().whileTrue(new BaseSetpoint(m_armSubsystem));
     m_armController.x().whileTrue(new RaisedSetpoint(m_armSubsystem));
-
     // Mute limit switch when the Right D-pad is held 
     m_armController.povRight().whileTrue(new MuteLimitSwitch(m_armSubsystem));
   }
