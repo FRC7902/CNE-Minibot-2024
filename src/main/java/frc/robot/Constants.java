@@ -22,10 +22,10 @@ public final class Constants {
     public static final double driveSpeedMultiplier = 0.5;
 
     // Motor Controller CAN IDs
-    public static final int leftBackCAN = 32;
-    public static final int leftFrontCAN = 31;
-    public static final int rightBackCAN = 33;
-    public static final int rightFrontCAN = 34;
+    public static final int leftBackCAN = 38;
+    public static final int leftFrontCAN = 39;
+    public static final int rightBackCAN = 36;
+    public static final int rightFrontCAN = 37;
 
     // Motor current limit to prevent overheating
     public static final int rpm = 3000;
