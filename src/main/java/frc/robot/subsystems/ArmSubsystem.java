@@ -16,6 +16,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ledConstants;
 import frc.robot.ArmUtils;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -37,6 +40,10 @@ public class ArmSubsystem extends SubsystemBase {
   // Declare motor controllers
   private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
   private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
+
+  private boolean m_isHoned = false;
+  private AddressableLED m_led = new AddressableLED(ledConstants.ledPWMId);
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(ledConstants.ledLength);
   
   /** Object of a simulated arm */
   /*private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
@@ -66,6 +73,20 @@ public class ArmSubsystem extends SubsystemBase {
     //m_driveSubsystem = drive;    
 
     configureMotors();
+
+    configureLEDs();
+  }
+
+  private void configureLEDs(){
+    m_led.setLength(m_ledBuffer.getLength());
+    m_led.setData(m_ledBuffer);
+    m_led.start();
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 255, 0, 0);
+   }
+   
+   m_led.setData(m_ledBuffer);
   }
 
   private void configureMotors() {
@@ -158,6 +179,16 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Setpoint: ", m_setpoint);
 
     SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
+
+    if(isLimitSwitchMuted){
+      m_isHoned=true;
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        m_ledBuffer.setRGB(i, 0, 255, 0);
+     }
+     
+     m_led.setData(m_ledBuffer);
+    }
  
   }
 
