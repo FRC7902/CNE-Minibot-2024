@@ -7,12 +7,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,9 +28,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
 
-  // Declare motor controllers
+  // Declare motor controller
   private final WPI_TalonSRX m_armLeaderMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
-  private final WPI_VictorSPX m_armPivotFollower =  new WPI_VictorSPX(ArmConstants.ArmFollowerMotorCAN);
 
   //private final DriveSubsystem m_driveSubsystem;
   private final static ArmUtils util = new ArmUtils();
@@ -83,15 +80,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     //Configure encoder
     m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,0);
+    m_armLeaderMotor.setSensorPhase(true);
 
     // Set velocity and acceleration of motors
     m_armLeaderMotor.configMotionCruiseVelocity(200);       // Adjust  
     m_armLeaderMotor.configMotionAcceleration(500);   // Adjust 
-
-    // Configure follower motor
-    m_armPivotFollower.configFactoryDefault();
-    m_armPivotFollower.follow(m_armLeaderMotor);
-    m_armPivotFollower.setInverted(InvertType.FollowMaster);
 
     // Configure motor settings
     m_armLeaderMotor.configVoltageCompSaturation(12,0);  
@@ -109,7 +102,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // Configure limit switch
-    m_armLeaderMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    m_armLeaderMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
   }
 
   public void configurePID() {
@@ -139,7 +132,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double getAngle() {
     // Get angle of arm in ticks (4096 per revolution) 
-    return modAngleInTicks(m_armLeaderMotor.getSensorCollection().getQuadraturePosition() / ArmConstants.EncoderToOutputRatio);
+    return modAngleInTicks(m_armLeaderMotor.getSensorCollection().getQuadraturePosition());
   }
 
   public double modAngleInTicks(double angleInTicks) {
@@ -153,7 +146,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean atZeroPos() {
-    return m_armLeaderMotor.isFwdLimitSwitchClosed() == 0;  // Switch open
+    return m_armLeaderMotor.isRevLimitSwitchClosed() == 0;  // Switch open
   }
 
   public void stopMotor() {
@@ -168,7 +161,7 @@ public class ArmSubsystem extends SubsystemBase {
       // Reset setpoint to base position
       setSetpoint(ArmConstants.BaseSetpoint);
     }
-    if (m_armLeaderMotor.isFwdLimitSwitchClosed() == 1 && !isLimitSwitchMuted) {
+    if (m_armLeaderMotor.isRevLimitSwitchClosed() == 1 && !isLimitSwitchMuted) {
       // Recalibrate arm encoder
       m_armLeaderMotor.getSensorCollection().setQuadraturePosition(0, 1);
     }
@@ -177,11 +170,14 @@ public class ArmSubsystem extends SubsystemBase {
     adjusted_feedforward = ArmConstants.ArmFeedforward * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.EncoderCPR));
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle: ", getAngle());
+    SmartDashboard.putNumber("Arm Angle: ", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR));
+    SmartDashboard.putNumber("Ticks", getAngle());
     SmartDashboard.putNumber("Arm Setpoint: ", m_setpoint);
     SmartDashboard.putBoolean("Limit switch muted: ", isLimitSwitchMuted);
     SmartDashboard.putNumber("Arm Feedforward: ", adjusted_feedforward);
-    SmartDashboard.putBoolean("Arm Limit Switch", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Arm Limit Switch: ", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
+    SmartDashboard.putBoolean("Arm Limit Switch (1): ", m_armLeaderMotor.isRevLimitSwitchClosed() == 1);
+    SmartDashboard.putNumber("Encoder Output: ", m_armLeaderMotor.getSupplyCurrent());
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation
