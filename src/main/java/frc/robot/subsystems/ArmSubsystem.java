@@ -98,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
     } else {
       // Configure motor for real hardware
       m_armLeaderMotor.setSensorPhase(true);
-      m_armLeaderMotor.setInverted(true);
+      m_armLeaderMotor.setInverted(false);
     }
 
     // Configure limit switch
@@ -123,7 +123,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setSetpoint(double setpoint) {
     m_setpoint = setpoint;
     // Set setpoint in ticks
-    m_armLeaderMotor.set(ControlMode.Position, util.degToCTRESensorUnits(setpoint, ArmConstants.EncoderCPR));
+    m_armLeaderMotor.set(ControlMode.MotionMagic, util.degToCTRESensorUnits(setpoint, ArmConstants.EncoderCPR));
   }
 
   public boolean atSetpoint() {
@@ -131,18 +131,18 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getAngle() {
-    // Get angle of arm in ticks (4096 per revolution) 
-    return modAngleInTicks(m_armLeaderMotor.getSensorCollection().getQuadraturePosition());
+    // Get raw angle of arm in ticks (4096 per revolution) 
+    return m_armLeaderMotor.getSensorCollection().getQuadraturePosition();
   }
 
   public double modAngleInTicks(double angleInTicks) {
     // Modulo the angle to within 0 - 4096
     return Math.IEEEremainder(angleInTicks, ArmConstants.EncoderCPR);
+
   }
 
   public void toggleLimitSwitchMute() {
     isLimitSwitchMuted = !isLimitSwitchMuted;
-    System.out.println("Limit switch muted: " + isLimitSwitchMuted);
   }
 
   public boolean atZeroPos() {
@@ -173,11 +173,13 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR));
     SmartDashboard.putNumber("Encoder ticks", getAngle());
     SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
+    SmartDashboard.putNumber("Setpoint Ticks", m_armLeaderMotor.getActiveTrajectoryPosition());
     SmartDashboard.putBoolean("Limit switch muted", isLimitSwitchMuted);
     SmartDashboard.putNumber("Arm Feedforward", adjusted_feedforward);
     SmartDashboard.putBoolean("Arm Fwd Limit Switch", m_armLeaderMotor.isFwdLimitSwitchClosed() == 1);
     SmartDashboard.putBoolean("Arm Rev Limit Switch", m_armLeaderMotor.isRevLimitSwitchClosed() == 1);
     SmartDashboard.putNumber("Encoder Output", m_armLeaderMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Motor Control Effort", m_armLeaderMotor.get());
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation
@@ -187,8 +189,8 @@ public class ArmSubsystem extends SubsystemBase {
         DemandType.ArbitraryFeedForward,    // For gravity compensation
         adjusted_feedforward
       );
-    } else
-        m_armLeaderMotor.set(0);
+    } //else
+       // m_armLeaderMotor.set(0);
   }
 
   @Override
