@@ -107,7 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     SmartDashboard.putNumber("Encoder 1", m_leftEncoder.getVelocity());
     SmartDashboard.putNumber("Encoder 2", m_rightEncoder.getVelocity());
+
+    
   }
 }
