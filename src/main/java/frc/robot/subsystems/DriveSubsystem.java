@@ -91,8 +91,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Setpoints for the PID system
   public void setVelocity(double velocity) {
-    m_rightPID.setReference(velocity, ControlType.kVelocity);
-    m_leftPID.setReference(velocity, ControlType.kVelocity);
+    m_rightPID.setReference(-velocity, ControlType.kVelocity);
+    m_leftPID.setReference(-velocity, ControlType.kVelocity);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
