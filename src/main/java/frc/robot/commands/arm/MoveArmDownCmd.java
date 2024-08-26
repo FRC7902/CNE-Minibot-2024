@@ -5,10 +5,10 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotContainer;
 
 public class MoveArmDownCmd extends Command {
-  private static final double ARM_SPEED = -0.5;
 
   /** Creates a new MoveArmDownCmd. */
   public MoveArmDownCmd() {
@@ -24,7 +24,7 @@ public class MoveArmDownCmd extends Command {
   @Override
   public void execute() {
     if (!RobotContainer.m_armSubsystem.atZeroPos()) {
-      RobotContainer.m_armSubsystem.setPower(ARM_SPEED);
+      RobotContainer.m_armSubsystem.setPower(-ArmConstants.ArmSpeed);
     } else {
       RobotContainer.m_armSubsystem.stopMotor();
     }

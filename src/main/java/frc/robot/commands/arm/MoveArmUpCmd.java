@@ -9,7 +9,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.RobotContainer;
 
 public class MoveArmUpCmd extends Command {
-  private static final double ARM_SPEED = 0.5;
 
   /** Creates a new MoveArmDownCmd. */
   public MoveArmUpCmd() {
@@ -26,7 +25,7 @@ public class MoveArmUpCmd extends Command {
   public void execute() {
     // Move arm up if not at upper limit
     if (RobotContainer.m_armSubsystem.getAngle() < ArmConstants.MaxAngle) {
-      RobotContainer.m_armSubsystem.setPower(ARM_SPEED);
+      RobotContainer.m_armSubsystem.setPower(ArmConstants.ArmSpeed);
     } else {
       RobotContainer.m_armSubsystem.stopMotor();
     }

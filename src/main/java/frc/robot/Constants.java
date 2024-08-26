@@ -33,6 +33,9 @@ public final class Constants {
     // CAN IDs for motor
     public static final int ArmLeaderMotorCAN = 22;
 
+    // Arm speed
+    public static final double armSpeed = 0.5;
+
     // Encoder constants
     public static final int EncoderCPR = 4096;
     public static final double EncoderToOutputRatio = 3;
