@@ -24,7 +24,7 @@ public class MoveArmDownCmd extends Command {
   @Override
   public void execute() {
     if (!RobotContainer.m_armSubsystem.atZeroPos()) {
-      RobotContainer.m_armSubsystem.setPower(-ArmConstants.armSpeed);
+      RobotContainer.m_armSubsystem.setPower(-ArmConstants.kArmSpeed);
     } else {
       RobotContainer.m_armSubsystem.stopMotor();
     }

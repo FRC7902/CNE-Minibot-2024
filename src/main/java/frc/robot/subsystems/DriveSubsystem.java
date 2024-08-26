@@ -15,15 +15,15 @@ import frc.robot.Constants.DriveConstants;
 public class DriveSubsystem extends SubsystemBase {
 
   // Left Motors
-  private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
+  private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.kLeftBackCAN,
       CANSparkMax.MotorType.kBrushless);
-  private final CANSparkMax m_leftFollowerMotor = new CANSparkMax(DriveConstants.leftFrontCAN,
+  private final CANSparkMax m_leftFollowerMotor = new CANSparkMax(DriveConstants.kLeftFrontCAN,
       CANSparkMax.MotorType.kBrushless);
 
   // Right Motors
-  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.rightFrontCAN,
+  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.kRightFrontCAN,
       CANSparkMax.MotorType.kBrushless);
-  private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.rightBackCAN,
+  private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.kRightBackCAN,
       CANSparkMax.MotorType.kBrushless);
 
   // Allows interfacing with the integrated PID Controller on the motors.

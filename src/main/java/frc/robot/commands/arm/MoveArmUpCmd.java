@@ -24,8 +24,8 @@ public class MoveArmUpCmd extends Command {
   @Override
   public void execute() {
     // Move arm up if not at upper limit
-    if (RobotContainer.m_armSubsystem.getAngle() < ArmConstants.MaxAngle) {
-      RobotContainer.m_armSubsystem.setPower(ArmConstants.ArmSpeed);
+    if (RobotContainer.m_armSubsystem.getAngle() < ArmConstants.kMaxAngle) {
+      RobotContainer.m_armSubsystem.setPower(ArmConstants.kArmSpeed);
     } else {
       RobotContainer.m_armSubsystem.stopMotor();
     }

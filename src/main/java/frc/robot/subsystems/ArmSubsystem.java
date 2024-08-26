@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ArmSubsystem extends SubsystemBase {
 
   // Declare motor controller
-  private final WPI_TalonSRX m_armMotor = new WPI_TalonSRX(ArmConstants.ArmLeaderMotorCAN);
+  private final WPI_TalonSRX m_armMotor = new WPI_TalonSRX(ArmConstants.kArmMotorCAN);
 
   private final static ArmUtils util = new ArmUtils();
   private double m_setpoint = 0;
@@ -123,12 +123,12 @@ public class ArmSubsystem extends SubsystemBase {
   public void setSetpoint(double setpoint) {
     m_setpoint = setpoint;
     // Set setpoint in ticks
-    m_armMotor.set(ControlMode.MotionMagic, util.degToCTRESensorUnits(setpoint, ArmConstants.EncoderCPR));
+    m_armMotor.set(ControlMode.MotionMagic, util.degToCTRESensorUnits(setpoint, ArmConstants.kEncoderCPR));
   }
 
   public boolean atSetpoint() {
     return Math.abs(
-        util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR) - m_setpoint) < ArmConstants.PositionTolerance;
+        util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.kEncoderCPR) - m_setpoint) < ArmConstants.kPositionTolerance;
   }
 
   public double getAngle() {
@@ -138,7 +138,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double modAngleInTicks(double angleInTicks) {
     // Modulo the angle to within 0 - 4096
-    return Math.IEEEremainder(angleInTicks, ArmConstants.EncoderCPR);
+    return Math.IEEEremainder(angleInTicks, ArmConstants.kEncoderCPR);
 
   }
 
@@ -160,7 +160,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     if (DriverStation.isDisabled()) {
       // Reset setpoint to base position
-      setSetpoint(ArmConstants.BaseSetpoint);
+      setSetpoint(ArmConstants.kBaseSetpoint);
     }
     if (m_armMotor.isRevLimitSwitchClosed() == 1 && !isLimitSwitchMuted) {
       // Recalibrate arm encoder
@@ -168,11 +168,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // Calculate feedforward
-    adjusted_feedforward = ArmConstants.ArmFeedforward
-        * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.EncoderCPR));
+    adjusted_feedforward = ArmConstants.kArmFeedForward
+        * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.kEncoderCPR));
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR));
+    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.kEncoderCPR));
     SmartDashboard.putNumber("Encoder ticks", getAngle());
     SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
     SmartDashboard.putNumber("Setpoint Ticks", m_armMotor.getActiveTrajectoryPosition());
@@ -193,7 +193,7 @@ public class ArmSubsystem extends SubsystemBase {
       // Update the simulation
       m_armMotor.set(
           ControlMode.MotionMagic,
-          util.degToCTRESensorUnits(m_setpoint, ArmConstants.EncoderCPR),
+          util.degToCTRESensorUnits(m_setpoint, ArmConstants.kEncoderCPR),
           DemandType.ArbitraryFeedForward, // For gravity compensation
           adjusted_feedforward);
     }
@@ -206,17 +206,17 @@ public class ArmSubsystem extends SubsystemBase {
 
     // Update the simulated encoder position
     m_armMotorSim.setQuadratureRawPosition(
-        util.radsToCTRESensorUnits(armSim.getAngleRads(), ArmConstants.EncoderCPR));
+        util.radsToCTRESensorUnits(armSim.getAngleRads(), ArmConstants.kEncoderCPR));
 
     // Update the mechanism ligament for visualization
     m_armPivot.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
 
     // Reset encoder position when arm is at rest position
-    if (armSim.getAngleRads() == Units.degreesToRadians(ArmConstants.BaseSetpoint)) {
+    if (armSim.getAngleRads() == Units.degreesToRadians(ArmConstants.kBaseSetpoint)) {
       m_armMotor.getSensorCollection().setQuadraturePosition(0, 0);
     }
     // Update analog position
-    m_armMotorSim.setAnalogPosition(util.radsToCTRESensorUnits(armSim.getAngleRads(), ArmConstants.EncoderCPR));
+    m_armMotorSim.setAnalogPosition(util.radsToCTRESensorUnits(armSim.getAngleRads(), ArmConstants.kEncoderCPR));
 
   }
 }

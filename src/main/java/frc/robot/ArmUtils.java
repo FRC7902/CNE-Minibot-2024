@@ -9,19 +9,19 @@ import frc.robot.Constants.ArmConstants;
 public class ArmUtils {
 
     public int radsToCTRESensorUnits(double angleInRads, int encoderCPR) {
-        return (int) (angleInRads * encoderCPR / 2 * Math.PI / ArmConstants.GearRatio);
+        return (int) (angleInRads * encoderCPR / 2 * Math.PI / ArmConstants.kGearRatio);
     }
 
     public double CTRESensorUnitsToRads(double angleInSensorUnits, int encoderCPR) {
-        return (angleInSensorUnits * 2 * Math.PI * ArmConstants.GearRatio / encoderCPR);
+        return (angleInSensorUnits * 2 * Math.PI * ArmConstants.kGearRatio / encoderCPR);
     }
 
     public int degToCTRESensorUnits(double angleInDeg, int encoderCPR) {
-        return (int) (angleInDeg * ArmConstants.GearRatio * encoderCPR / 360);
+        return (int) (angleInDeg * ArmConstants.kGearRatio * encoderCPR / 360);
     }
 
     public double CTRESensorUnitsToDeg(double angleInSensorUnits, int encoderCPR) {
-        return (angleInSensorUnits * 360.0 / encoderCPR / ArmConstants.GearRatio);
+        return (angleInSensorUnits * 360.0 / encoderCPR / ArmConstants.kGearRatio);
     }
 
     // ku = ultimate gain, tu = oscillation period

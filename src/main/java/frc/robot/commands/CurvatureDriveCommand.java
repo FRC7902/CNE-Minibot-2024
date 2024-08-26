@@ -23,8 +23,8 @@ public class CurvatureDriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveSpeed = ((RobotContainer.m_driverController.getLeftY()) * DriveConstants.driveSpeedMultiplier);
-    double rotateSpeed = ((RobotContainer.m_driverController.getRightX()) * DriveConstants.driveSpeedMultiplier);
+    double moveSpeed = ((RobotContainer.m_driverController.getLeftY()) * DriveConstants.kDriveSpeedMultiplier);
+    double rotateSpeed = ((RobotContainer.m_driverController.getRightX()) * DriveConstants.kDriveSpeedMultiplier);
 
     RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
   }

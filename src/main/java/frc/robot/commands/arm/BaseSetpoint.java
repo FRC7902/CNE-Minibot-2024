@@ -18,7 +18,7 @@ public class BaseSetpoint extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.m_armSubsystem.setSetpoint(ArmConstants.BaseSetpoint);
+    RobotContainer.m_armSubsystem.setSetpoint(ArmConstants.kBaseSetpoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
