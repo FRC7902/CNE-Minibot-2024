@@ -73,7 +73,7 @@ public class RobotContainer {
     m_armController.circle().onTrue(new BaseSetpoint(m_armSubsystem));
     m_armController.square().onTrue(new RaisedSetpoint(m_armSubsystem));
     // Mute limit switch when the Right D-pad is held 
-    m_armController.povRight().whileTrue(new MuteLimitSwitch(m_armSubsystem));
+    m_armController.povRight().onTrue(new MuteLimitSwitch(m_armSubsystem));
   }
 
 
