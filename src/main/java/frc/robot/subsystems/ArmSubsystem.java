@@ -35,6 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final static ArmUtils util = new ArmUtils();
   private double m_setpoint = 0;
   private static boolean isLimitSwitchMuted = false;
+  private static boolean isHoned = false;
   private static double adjusted_feedforward;
 
   /** Object of a simulated arm **/
@@ -64,7 +65,6 @@ public class ArmSubsystem extends SubsystemBase {
   
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {    
-    //m_driveSubsystem = drive;    
     configureMotors();
     configurePID();
 
@@ -80,11 +80,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     //Configure encoder
     m_armLeaderMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0,0);
-    m_armLeaderMotor.setSensorPhase(true);
 
     // Set velocity and acceleration of motors
-    m_armLeaderMotor.configMotionCruiseVelocity(200);       // Adjust  
-    m_armLeaderMotor.configMotionAcceleration(500);   // Adjust 
+    m_armLeaderMotor.configMotionCruiseVelocity(200000);       // Adjust  
+    m_armLeaderMotor.configMotionAcceleration(500000);   // Adjust 
 
     // Configure motor settings
     m_armLeaderMotor.configVoltageCompSaturation(12,0);  
@@ -97,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
       m_armLeaderMotor.setInverted(true);
     } else {
       // Configure motor for real hardware
-      m_armLeaderMotor.setSensorPhase(true);
+      m_armLeaderMotor.setSensorPhase(false);  
       m_armLeaderMotor.setInverted(false);
     }
 
@@ -127,7 +126,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean atSetpoint() {
-    return Math.abs(getAngle() - m_setpoint) < ArmConstants.PositionTolerance;
+    return Math.abs(util.CTRESensorUnitsToDeg(getAngle(), ArmConstants.EncoderCPR) - m_setpoint) < ArmConstants.PositionTolerance;
   }
 
   public double getAngle() {
@@ -153,6 +152,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_armLeaderMotor.stopMotor();
   }
 
+ 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -165,7 +165,7 @@ public class ArmSubsystem extends SubsystemBase {
       // Recalibrate arm encoder
       m_armLeaderMotor.getSensorCollection().setQuadraturePosition(0, 1);
     }
-
+    
     // Calculate feedforward
     adjusted_feedforward = ArmConstants.ArmFeedforward * Math.cos(util.degToCTRESensorUnits(getAngle(), ArmConstants.EncoderCPR));
 
@@ -180,6 +180,11 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Arm Rev Limit Switch", m_armLeaderMotor.isRevLimitSwitchClosed() == 1);
     SmartDashboard.putNumber("Encoder Output", m_armLeaderMotor.getSupplyCurrent());
     SmartDashboard.putNumber("Motor Control Effort", m_armLeaderMotor.get());
+    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
+    SmartDashboard.putNumber("Error", m_armLeaderMotor.getClosedLoopError());
+/*     SmartDashboard.putNumber("Velocity", m_armLeaderMotor.());
+    SmartDashboard.putNumber("Acceleration", m_armLeaderMotor.); */
+
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation
@@ -189,8 +194,7 @@ public class ArmSubsystem extends SubsystemBase {
         DemandType.ArbitraryFeedForward,    // For gravity compensation
         adjusted_feedforward
       );
-    } //else
-       // m_armLeaderMotor.set(0);
+    } 
   }
 
   @Override
