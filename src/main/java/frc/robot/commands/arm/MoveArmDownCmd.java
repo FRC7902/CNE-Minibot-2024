@@ -5,36 +5,35 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.RobotContainer;
 
 public class MoveArmDownCmd extends Command {
-  private ArmSubsystem m_armSubsystem;
   private static final double ARM_SPEED = -0.5;
 
   /** Creates a new MoveArmDownCmd. */
-  public MoveArmDownCmd(ArmSubsystem arm) {
-    m_armSubsystem = arm;
-    addRequirements(arm);
+  public MoveArmDownCmd() {
+    addRequirements(RobotContainer.m_armSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!m_armSubsystem.atZeroPos()) {
-      m_armSubsystem.setPower(ARM_SPEED);
+    if (!RobotContainer.m_armSubsystem.atZeroPos()) {
+      RobotContainer.m_armSubsystem.setPower(ARM_SPEED);
     } else {
-      m_armSubsystem.stopMotor();
+      RobotContainer.m_armSubsystem.stopMotor();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_armSubsystem.stopMotor();
+    RobotContainer.m_armSubsystem.stopMotor();
   }
 
   // Returns true when the command should end.

@@ -5,20 +5,19 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.RobotContainer;
 
 public class MuteLimitSwitch extends Command {
-  private final ArmSubsystem m_armSubsystem;
 
   /** Creates a new MuteLimitSwitch. */
-  public MuteLimitSwitch(ArmSubsystem arm) {
-    m_armSubsystem = arm;
+  public MuteLimitSwitch() {
+    addRequirements(RobotContainer.m_armSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_armSubsystem.toggleLimitSwitchMute();
+    RobotContainer.m_armSubsystem.toggleLimitSwitchMute();
   }
 
   // Returns true when the command should end.
