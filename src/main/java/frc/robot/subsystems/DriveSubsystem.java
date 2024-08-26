@@ -32,6 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkPIDController m_leftPID = m_leftLeaderMotor.getPIDController();
   private final SparkPIDController m_rightPID = m_rightLeaderMotor.getPIDController();
 
+
   // Instantiates the DifferentialDrive class and the XboxController class
   public final DifferentialDrive m_drive;
 
@@ -39,10 +40,22 @@ public class DriveSubsystem extends SubsystemBase {
   private final RelativeEncoder m_leftEncoder = m_leftLeaderMotor.getEncoder();
   private final RelativeEncoder m_rightEncoder = m_rightLeaderMotor.getEncoder();
 
+  public void invertRightmotor(){
+    m_rightLeaderMotor.setInverted(true);
+  }
+
+
+ // public void stopreverseRotation(){
+   // if m_leftEncoder.getVelocity(); 
+//this code will stop the motor from going into the other direction 
+  //}
+
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     configureMotors();
     configurePID();
+    pidOutputRange();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
@@ -55,10 +68,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftFollowerMotor.restoreFactoryDefaults();
     m_rightLeaderMotor.restoreFactoryDefaults();
     m_rightFollowerMotor.restoreFactoryDefaults();
+    m_leftLeaderMotor.enableVoltageCompensation(12);
+    m_rightLeaderMotor.enableVoltageCompensation(12);
+    
 
     // Inverts the leader motor of each side so that the motors aren't going against
     // each other
-    m_leftLeaderMotor.setInverted(true);
+    m_leftLeaderMotor.setInverted(false);
     m_rightLeaderMotor.setInverted(true);
 
     // Any updates made to the Leader Motor will additionally be made to the
@@ -74,13 +90,25 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void configurePID() {
-    m_leftPID.setP(0.00079); // Integral, derivative, and proportional gains for the PID controller
-    m_leftPID.setD(0.0000);
-    m_leftPID.setI(0.0000);
+    m_leftPID.setP(0.000349); // Integral, derivative, and proportional gains for the PID controller
 
-    m_rightPID.setP(0.00079);
-    m_rightPID.setD(0.0000);
-    m_rightPID.setI(0.0000);
+    m_leftPID.setD(0.000001);
+
+
+
+
+    m_leftPID.setI(0.0000005);
+
+    m_leftPID.setFF(0.00005);
+
+    m_rightPID.setP(0.000349);
+
+    m_rightPID.setD(0.000001);
+    m_rightPID.setI(0.0000005);
+
+    m_rightPID.setFF(0.00005);
+
+    
   }
 
   // Allows setDistanceToDrive to accept an argument
@@ -91,8 +119,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Setpoints for the PID system
   public void setVelocity(double velocity) {
-    m_rightPID.setReference(-velocity, ControlType.kVelocity);
-    m_leftPID.setReference(-velocity, ControlType.kVelocity);
+    m_rightPID.setReference(velocity, ControlType.kVelocity);
+    m_leftPID.setReference(velocity, ControlType.kVelocity);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
@@ -101,8 +129,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // it controls the range of output of the PID controller
   public void pidOutputRange() {
-    m_leftPID.setOutputRange(0.0, 0.0);
-    m_rightPID.setOutputRange(0.0, 0.0);
+    m_leftPID.setOutputRange(0.0, 1.0);
+    m_rightPID.setOutputRange(0.0, 1.0);
   }
 
   @Override
