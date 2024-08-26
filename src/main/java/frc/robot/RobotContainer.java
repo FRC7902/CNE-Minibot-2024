@@ -34,10 +34,10 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   
   // Controllers
-  public static final CommandXboxController m_driverController = new CommandXboxController(
+  public static final CommandPS5Controller m_driverController = new CommandPS5Controller(
       OperatorConstants.kDriverControllerPort);
-  public static final CommandPS5Controller m_armController = new CommandPS5Controller(
-      OperatorConstants.kDriverControllerPort);
+  public static final CommandPS5Controller m_operatorController = new CommandPS5Controller(
+      OperatorConstants.kOperatorControllerPort);
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -68,12 +68,12 @@ public class RobotContainer {
     m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
   
     // Arm-related commands
-    m_armController.triangle().whileTrue(new MoveArmUpCmd(m_armSubsystem));
-    m_armController.cross().whileTrue(new MoveArmDownCmd(m_armSubsystem));
-    m_armController.circle().onTrue(new BaseSetpoint(m_armSubsystem));
-    m_armController.square().onTrue(new RaisedSetpoint(m_armSubsystem));
+    m_operatorController.triangle().whileTrue(new MoveArmUpCmd(m_armSubsystem));
+    m_operatorController.cross().whileTrue(new MoveArmDownCmd(m_armSubsystem));
+    m_operatorController.circle().onTrue(new BaseSetpoint(m_armSubsystem));
+    m_operatorController.square().onTrue(new RaisedSetpoint(m_armSubsystem));
     // Mute limit switch when the Right D-pad is held 
-    m_armController.povRight().onTrue(new MuteLimitSwitch(m_armSubsystem));
+    m_operatorController.povRight().onTrue(new MuteLimitSwitch(m_armSubsystem));
   }
 
 
