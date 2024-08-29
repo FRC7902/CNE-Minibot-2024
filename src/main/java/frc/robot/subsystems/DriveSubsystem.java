@@ -32,7 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkPIDController m_leftPID = m_leftLeaderMotor.getPIDController();
   private final SparkPIDController m_rightPID = m_rightLeaderMotor.getPIDController();
 
-
+  
   // Instantiates the DifferentialDrive class and the XboxController class
   public final DifferentialDrive m_drive;
 
