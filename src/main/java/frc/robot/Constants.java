@@ -23,10 +23,10 @@ public final class Constants {
     public static final double kDriveSpeedMultiplier = 0.5;
 
     // Motor Controller CAN IDs
-    public static final int kLeftFrontCAN = 31;
-    public static final int kLeftBackCAN = 32;
-    public static final int kRightFrontCAN = 34;
-    public static final int kRightBackCAN = 33;
+    public static final int leftBackCAN = 38;
+    public static final int leftFrontCAN = 39;
+    public static final int rightBackCAN = 36;
+    public static final int rightFrontCAN = 37;
   }
 
   public static class OperatorConstants {
