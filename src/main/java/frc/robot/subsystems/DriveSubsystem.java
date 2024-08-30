@@ -4,10 +4,12 @@
 
 package frc.robot.subsystems;
 
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.REVPhysicsSim;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -148,4 +150,16 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   }
+  public void Simulate(){ 
+    var leftfollowermotorsim=m_leftFollowerMotor.getSimState();
+
+
+    var leftleadermotorsim=m_leftLeaderMotor.getSimState();
+
+
+    var rightleadermotorsim=m_rightLeaderMotor.getSimState();
+
+
+    var rightfollowermotorsim=m_rightFollowerMotor.getSimState();
+} //https://codedocs.revrobotics.com/java/com/revrobotics/revphysicssim
 }
