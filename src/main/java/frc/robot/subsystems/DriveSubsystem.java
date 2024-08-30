@@ -7,8 +7,10 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -40,6 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     configureMotors();
+    configurePID();
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
@@ -70,12 +73,42 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightFollowerMotor.setSmartCurrentLimit(45);
   }
 
+  public void setVelocity(double velocity) {
+    m_rightPID.setReference(velocity, ControlType.kVelocity);
+    m_leftPID.setReference(velocity, ControlType.kVelocity);
+  }
+
+  private void configurePID() {
+    m_leftPID.setP(0.000349); // Integral, derivative, and proportional gains for the PID controller
+
+    m_leftPID.setD(0.000001);
+
+    m_leftPID.setI(0.0000005);
+
+    m_leftPID.setFF(0.00005);
+
+    m_rightPID.setP(0.000349);
+
+    m_rightPID.setD(0.000001);
+    m_rightPID.setI(0.0000005);
+
+    m_rightPID.setFF(0.00005);
+
+  }
+
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
   }
 
+  public void driveForward(double speed) {
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Left Motor Speed", m_leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Right Motor Speed", m_rightEncoder.getVelocity());
+    
+    
     // This method will be called once per scheduler run
   }
 }
