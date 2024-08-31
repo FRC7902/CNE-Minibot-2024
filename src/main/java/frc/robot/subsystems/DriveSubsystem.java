@@ -21,9 +21,9 @@ public class DriveSubsystem extends SubsystemBase {
       CANSparkMax.MotorType.kBrushless);
 
   // Right Motors
-  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.kRightFrontCAN,
+  private final CANSparkMax m_rightLeaderMotor = new CANSparkMax(DriveConstants.kRightBackCAN,
       CANSparkMax.MotorType.kBrushless);
-  private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.kRightBackCAN,
+  private final CANSparkMax m_rightFollowerMotor = new CANSparkMax(DriveConstants.kRightFrontCAN,
       CANSparkMax.MotorType.kBrushless);
 
   // Allows interfacing with the integrated PID Controller on the motors.

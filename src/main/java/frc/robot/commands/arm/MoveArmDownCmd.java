@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 
 public class MoveArmDownCmd extends Command {
 
+
   /** Creates a new MoveArmDownCmd. */
   public MoveArmDownCmd() {
     addRequirements(RobotContainer.m_armSubsystem);
@@ -23,8 +24,8 @@ public class MoveArmDownCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!RobotContainer.m_armSubsystem.atZeroPos()) {
-      RobotContainer.m_armSubsystem.setPower(-ArmConstants.kArmSpeed);
+    if (RobotContainer.m_armSubsystem.atZeroPos()) {
+      RobotContainer.m_armSubsystem.setSetpoint(0, ArmConstants.defaultAcceleration, ArmConstants.defaultSpeed);
     } else {
       RobotContainer.m_armSubsystem.stopMotor();
     }

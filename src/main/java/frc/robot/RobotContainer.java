@@ -10,11 +10,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CurvatureDriveCommand;
+import frc.robot.commands.ShootNodeCmd;
 import frc.robot.commands.arm.BaseSetpoint;
 import frc.robot.commands.arm.MoveArmDownCmd;
 import frc.robot.commands.arm.MoveArmUpCmd;
 import frc.robot.commands.arm.MuteLimitSwitch;
-import frc.robot.commands.arm.RaisedSetpoint;
+//import frc.robot.commands.arm.RaisedSetpoint;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -70,7 +71,7 @@ public class RobotContainer {
     m_operatorController.triangle().whileTrue(new MoveArmUpCmd());
     m_operatorController.cross().whileTrue(new MoveArmDownCmd());
     m_operatorController.circle().onTrue(new BaseSetpoint());
-    m_operatorController.square().onTrue(new RaisedSetpoint());
+    m_operatorController.square().onTrue(new ShootNodeCmd());
     // Mute limit switch when the Right D-pad is held
     m_operatorController.povRight().onTrue(new MuteLimitSwitch());
   }

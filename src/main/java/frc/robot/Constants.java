@@ -20,13 +20,13 @@ public final class Constants {
   public static class DriveConstants {
 
     // Multiplier for the speed of the robot
-    public static final double kDriveSpeedMultiplier = 0.5;
+    public static final double kDriveSpeedMultiplier = 0.75;
 
     // Motor Controller CAN IDs
-    public static final int leftBackCAN = 38;
-    public static final int leftFrontCAN = 39;
-    public static final int rightBackCAN = 36;
-    public static final int rightFrontCAN = 37;
+    public static final int kLeftBackCAN = 38;
+    public static final int kLeftFrontCAN = 39;
+    public static final int kRightBackCAN = 36;
+    public static final int kRightFrontCAN = 37;
   }
 
   public static class OperatorConstants {
@@ -39,7 +39,7 @@ public final class Constants {
     public static final int kArmMotorCAN = 22;
 
     // Arm speed
-    public static final double kArmSpeed = 0.5;
+    public static final double kArmSpeed = 0.75;
 
     // Encoder constants
     public static final int kEncoderCPR = 4096;
@@ -52,11 +52,15 @@ public final class Constants {
 
     // Setpoints in degrees
     public static final double kBaseSetpoint = 0;
-    public static final double kRaisedSetpoint = 90;
+    public static final double kRaisedSetpoint = 30;
     public static final double kPositionTolerance = 5;
 
-    public static final double kGearRatio = 3;
-    public static final double kMaxAngle = 90;
-    public static final double kArmFeedForward = 0.88 / 12; // T = 8.52N*m
+    public static final double kGearRatio = 3; 
+    public static final double kMaxAngle = 70.0;
+    public static final double kArmFeedForward = 2.22 / 12; // T P= 8.52N*m
+
+    public static final int defaultSpeed = 400;
+    public static final int defaultAcceleration = 400;
+
   }
 }

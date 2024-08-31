@@ -9,8 +9,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotContainer;
 
 public class CurvatureDriveCommand extends Command {
+
   /** Creates a new CurvatureDrive. */
-  public CurvatureDriveCommand() {
+  public  CurvatureDriveCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(frc.robot.RobotContainer.m_driveSubsystem);
   }
@@ -23,8 +24,8 @@ public class CurvatureDriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveSpeed = ((RobotContainer.m_driverController.getLeftY()) * DriveConstants.kDriveSpeedMultiplier);
-    double rotateSpeed = ((RobotContainer.m_driverController.getRightX()) * DriveConstants.kDriveSpeedMultiplier);
+    double moveSpeed = ((-RobotContainer.m_driverController.getLeftY()) * 1);
+    double rotateSpeed = ((-RobotContainer.m_driverController.getRightX()) * 0.);
 
     RobotContainer.m_driveSubsystem.curvatureDrive(rotateSpeed, moveSpeed);
   }
