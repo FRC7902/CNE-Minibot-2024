@@ -144,7 +144,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean atSetpoint() {
     return Math.abs(
-        ArmUtils.CTRESensorUnitsToDeg(getAngle()) - m_setpoint) < ArmConstants.kPositionTolerance;
+        util.CTRESensorUnitsToDeg(getAngle()) - m_setpoint) < ArmConstants.kPositionTolerance;
   }
 
   public double getAngle() {
@@ -192,7 +192,7 @@ public class ArmSubsystem extends SubsystemBase {
         * Math.cos(util.degToCTRESensorUnits(getAngle()));
 
     // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle", ArmUtils.CTRESensorUnitsToDeg(getAngle()));
+    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle()));
     SmartDashboard.putNumber("Encoder ticks", getAngle());
     SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
     SmartDashboard.putNumber("Setpoint Ticks", m_armMotor.getActiveTrajectoryPosition());
@@ -204,11 +204,9 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Motor Control Effort", m_armMotor.get());
     SmartDashboard.putBoolean("At Setpoint", atSetpoint());
     SmartDashboard.putNumber("Error", m_armMotor.getClosedLoopError());
-    /*
-     * SmartDashboard.putNumber("Velocity", m_armLeaderMotor.());
-     * SmartDashboard.putNumber("Acceleration", m_armLeaderMotor.);
-     */
-
+    SmartDashboard.putNumber("Arm Velocity (deg/s)", util.encoderVelocityToDegPerSec(m_armMotor.getSelectedSensorVelocity()));
+    
+    
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation
       m_armMotor.set(

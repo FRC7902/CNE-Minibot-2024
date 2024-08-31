@@ -20,7 +20,7 @@ public class ArmUtils {
         return (int) (angleInDeg * ArmConstants.kGearRatio * ArmConstants.kEncoderCPR / 360);
     }
 
-    public static double CTRESensorUnitsToDeg(double angleInSensorUnits) {
+    public double CTRESensorUnitsToDeg(double angleInSensorUnits) {
         return (angleInSensorUnits * 360.0 / ArmConstants.kEncoderCPR / ArmConstants.kGearRatio);
     }
 
@@ -33,4 +33,11 @@ public class ArmUtils {
         return constants;
       }
 
+    public double encoderVelocityToRPM(double encoderVelocity) {
+        return encoderVelocity * 600 / ArmConstants.kEncoderCPR * ArmConstants.kGearRatio;     // Encoder ticks per 100ms
+    }
+
+    public double encoderVelocityToDegPerSec(double encoderVelocity) {
+        return encoderVelocity * 10 * 360 / ArmConstants.kEncoderCPR * ArmConstants.kGearRatio; 
+    }
 }
