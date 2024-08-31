@@ -35,8 +35,9 @@ public class ArmSubsystem extends SubsystemBase {
   private double m_setpoint = 0;
   private static boolean isLimitSwitchMuted = false;
   private static double adjusted_feedforward;
-  
+  private static boolean isHomed = false;
 
+  
   /** Object of a simulated arm **/
   private final SingleJointedArmSim armSim = new SingleJointedArmSim(
       DCMotor.getCIM(2),
@@ -133,6 +134,7 @@ public class ArmSubsystem extends SubsystemBase {
     setSetpoint(setpoint, ArmConstants.defaultAcceleration, ArmConstants.defaultSpeed);
   }
 
+
   public void setSetpoint(double setpoint, ControlMode mode) {
     m_armMotor.set(mode, util.degToCTRESensorUnits(setpoint));
   };
@@ -161,6 +163,10 @@ public class ArmSubsystem extends SubsystemBase {
   public void toggleLimitSwitchMute() {
     isLimitSwitchMuted = !isLimitSwitchMuted;
   }
+
+  public boolean isLimitSwitchPressed() {
+    return isLimitSwitchMuted;
+  };
 
   public boolean atZeroPos() {
     return m_armMotor.isRevLimitSwitchClosed() == 0; // Switch open
@@ -205,6 +211,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("At Setpoint", atSetpoint());
     SmartDashboard.putNumber("Error", m_armMotor.getClosedLoopError());
     SmartDashboard.putNumber("Arm Velocity (deg/s)", util.encoderVelocityToDegPerSec(m_armMotor.getSelectedSensorVelocity()));
+    SmartDashboard.putBoolean("Arm Homed", isHomed);
     
     
     if (RobotBase.isSimulation() || !atSetpoint()) {

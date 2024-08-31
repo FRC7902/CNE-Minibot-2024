@@ -52,7 +52,7 @@ public final class Constants {
 
     // Setpoints in degrees
     public static final double kBaseSetpoint = 0;
-    public static final double kRaisedSetpoint = 30;
+    public static final double kRaisedSetpoint = 35;
     public static final double kPositionTolerance = 5;
 
     public static final double kGearRatio = 3; 
@@ -62,5 +62,9 @@ public final class Constants {
     public static final int defaultSpeed = 400;
     public static final int defaultAcceleration = 400;
 
+  }
+
+  public static class AutoConstants {
+ 
   }
 }

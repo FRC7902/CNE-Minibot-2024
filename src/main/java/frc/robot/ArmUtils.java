@@ -20,7 +20,7 @@ public class ArmUtils {
         return (int) (angleInDeg * ArmConstants.kGearRatio * ArmConstants.kEncoderCPR / 360);
     }
 
-    public double CTRESensorUnitsToDeg(double angleInSensorUnits) {
+    public static double CTRESensorUnitsToDeg(double angleInSensorUnits) {
         return (angleInSensorUnits * 360.0 / ArmConstants.kEncoderCPR / ArmConstants.kGearRatio);
     }
 

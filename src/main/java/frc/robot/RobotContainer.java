@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.CurvatureDriveCommand;
-import frc.robot.commands.ShootNodeCmd;
-import frc.robot.commands.arm.BaseSetpoint;
-import frc.robot.commands.arm.MoveArmDownCmd;
-import frc.robot.commands.arm.MoveArmUpCmd;
-import frc.robot.commands.arm.MuteLimitSwitch;
+import frc.robot.commands.autonomousCommands.MoveFwdAndShoot;
+import frc.robot.commands.autonomousCommands.ShootNodeCmd;
+import frc.robot.commands.teleopCommands.arm.BaseSetpoint;
+import frc.robot.commands.teleopCommands.arm.MoveArmDownCmd;
+import frc.robot.commands.teleopCommands.arm.MoveArmUpCmd;
+import frc.robot.commands.teleopCommands.arm.MuteLimitSwitch;
+import frc.robot.commands.teleopCommands.drive.CurvatureDriveCommand;
 //import frc.robot.commands.arm.RaisedSetpoint;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -72,6 +73,7 @@ public class RobotContainer {
     m_operatorController.cross().whileTrue(new MoveArmDownCmd());
     m_operatorController.circle().onTrue(new BaseSetpoint());
     m_operatorController.square().onTrue(new ShootNodeCmd());
+    
     // Mute limit switch when the Right D-pad is held
     m_operatorController.povRight().onTrue(new MuteLimitSwitch());
   }
@@ -83,6 +85,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new MoveFwdAndShoot();
   }
 }

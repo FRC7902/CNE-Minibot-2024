@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -68,14 +70,44 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightLeaderMotor.setSmartCurrentLimit(45);
     m_leftFollowerMotor.setSmartCurrentLimit(45);
     m_rightFollowerMotor.setSmartCurrentLimit(45);
+
+    
+    m_rightLeaderMotor.setIdleMode(IdleMode.kBrake);
+    m_rightFollowerMotor.setIdleMode(IdleMode.kBrake);
+    m_leftLeaderMotor.setIdleMode(IdleMode.kBrake);
+    m_leftFollowerMotor.setIdleMode(IdleMode.kBrake);
+
+  }
+
+  public void resetEncoders() {
+    m_rightEncoder.setPosition(0);
+    m_leftEncoder.setPosition(0);
+  }
+
+  public void stop() {
+    m_rightLeaderMotor.set(0);
+    m_leftLeaderMotor.set(0);
+  }
+
+  public void setPowerRight(double power) {
+    m_rightLeaderMotor.set(power);
+  }
+
+  public void setPowerLeft(double power) {
+    m_leftLeaderMotor.set(power);
   }
 
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    SmartDashboard.putNumber("Right drive", m_rightLeaderMotor.get());
+    SmartDashboard.putNumber("Left drive", m_leftLeaderMotor.get());
+
   }
 }
