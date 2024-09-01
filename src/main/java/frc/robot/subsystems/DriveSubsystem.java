@@ -45,6 +45,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Initialize the DifferentialDrive class with the left and right leader motors
     m_drive = new DifferentialDrive(m_leftLeaderMotor, m_rightLeaderMotor);
+    m_drive.setDeadband(0.05);
   }
 
   private void configureMotors() {
@@ -100,7 +101,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void curvatureDrive(double moveSpeed, double rotateSpeed) {
     m_drive.curvatureDrive(moveSpeed, rotateSpeed, true);
   }
-
 
   @Override
   public void periodic() {

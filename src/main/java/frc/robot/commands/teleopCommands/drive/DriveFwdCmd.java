@@ -23,7 +23,7 @@ public class DriveFwdCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_driveSubsystem.setPowerRight(-0.45);
+    RobotContainer.m_driveSubsystem.setPowerRight(-0.5);
     RobotContainer.m_driveSubsystem.setPowerLeft(-0.5);
   }
 
