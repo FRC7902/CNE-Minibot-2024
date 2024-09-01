@@ -9,14 +9,16 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.REVPhysicsSim;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
+
 
   // Left Motors
   private final CANSparkMax m_leftLeaderMotor = new CANSparkMax(DriveConstants.leftBackCAN,
@@ -150,16 +152,30 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   }
-  public void Simulate(){ 
-    var leftfollowermotorsim=m_leftFollowerMotor.getSimState();
+  //Create drivetrain simulation object😘👌
+  DifferentialDrivetrainSim driveSimulate=new DifferentialDrivetrainSim(null, null, 0, 0, 0, null);
+  //Encoder simulation🎵📏📐
+  private EncoderSim simulateLeftEncoder=new EncoderSim(null);
+  private EncoderSim simulateRightEncoder=new EncoderSim(null);
 
 
-    var leftleadermotorsim=m_leftLeaderMotor.getSimState();
+  //Drivetrain simulation method🤯💻
+  @Override
+  public void simulationPeriodic(){ 
+  // Set inputs to the simulated drivetrain, like the motor voltage 
+    driveSimulate.setInputs(0.0,0.0);
+  // Make the simulated drivetrain update
+    driveSimulate.update(0.00);
+  // Update all of our sensors, which are encoders in this case. I'm guessing its a feedback loop or something like that. 
+    simulateLeftEncoder.setDistance(0.0);
+    simulateRightEncoder.setRate(0.0);
+    simulateLeftEncoder.setDistance(0.0);
+    simulateRightEncoder.setRate(0.0);
+  } 
+} 
 
 
-    var rightleadermotorsim=m_rightLeaderMotor.getSimState();
-
-
-    var rightfollowermotorsim=m_rightFollowerMotor.getSimState();
-} //https://codedocs.revrobotics.com/java/com/revrobotics/revphysicssim
-}
+//https://codedocs.revrobotics.com/java/com/revrobotics/revphysicssim we should simulate in this file
+//https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/drivetrain-model.html
+//https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/drivesim-tutorial/updating-drivetrain-model.html
+//https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/simulation/package-summary.html
