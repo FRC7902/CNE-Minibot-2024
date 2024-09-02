@@ -156,7 +156,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
   //Create drivetrain simulation object😘👌
 
-  private DifferentialDrivetrainSim driveSimulate=new DifferentialDrivetrainSim(DCMotor.getNeo550(2),7.29,7.5,60.0,0.0762,0.7112,VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
+  private DifferentialDrivetrainSim driveSimulate=new DifferentialDrivetrainSim(DCMotor.getNeo550(2),7.29,
+  7.5,60.0,0.0762,0.7112,VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
   
   //Encoder simulation🎵📏📐
   private EncoderSim simulateLeftEncoder=new EncoderSim(null);
