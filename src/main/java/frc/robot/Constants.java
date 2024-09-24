@@ -5,27 +5,66 @@
 package frc.robot;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
   public static class DriveConstants {
 
     // Multiplier for the speed of the robot
-    public static final double driveSpeedMultiplier = 0.5;
+    public static final double kDriveSpeedMultiplier = 0.75;
 
     // Motor Controller CAN IDs
-    public static final int leftBackCAN = 32;
-    public static final int leftFrontCAN = 31;
-    public static final int rightBackCAN = 33;
-    public static final int rightFrontCAN = 34;
+    public static final int kLeftBackCAN = 38;
+    public static final int kLeftFrontCAN = 39;
+    public static final int kRightBackCAN = 36;
+    public static final int kRightFrontCAN = 37;
   }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+  }
+
+  public static class ArmConstants {
+    // CAN IDs for motor
+    public static final int kArmMotorCAN = 22;
+
+    // Arm speed
+    public static final double kArmSpeed = 0.75;
+
+    // Encoder constants
+    public static final int kEncoderCPR = 4096;
+    public static final double kEncoderToOutputRatio = 3;
+
+    // PID gains
+    public static final double kP = 15;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    // Setpoints in degrees
+    public static final double kBaseSetpoint = 0;
+    public static final double kRaisedSetpoint = 35;
+    public static final double kPositionTolerance = 5;
+
+    public static final double kGearRatio = 3; 
+    public static final double kMaxAngle = 70.0;
+    public static final double kArmFeedForward = 2.22 / 12; // T P= 8.52N*m
+
+    public static final int defaultSpeed = 400;
+    public static final int defaultAcceleration = 400;
+
+  }
+
+  public static class AutoConstants {
+ 
   }
 }
-

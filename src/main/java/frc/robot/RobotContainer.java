@@ -4,15 +4,21 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.CurvatureDriveCommand;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.autonomousCommands.MoveFwdAndShoot;
+import frc.robot.commands.autonomousCommands.ShootNodeCmd;
+import frc.robot.commands.teleopCommands.arm.BaseSetpoint;
+import frc.robot.commands.teleopCommands.arm.MoveArmDownCmd;
+import frc.robot.commands.teleopCommands.arm.MoveArmUpCmd;
+import frc.robot.commands.teleopCommands.arm.MuteLimitSwitch;
+import frc.robot.commands.teleopCommands.drive.CurvatureDriveCommand;
+//import frc.robot.commands.arm.RaisedSetpoint;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,10 +32,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  public static final CommandXboxController m_driverController = new CommandXboxController(
+  public static final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+
+  // Controllers
+  public static final CommandPS5Controller m_driverController = new CommandPS5Controller(
       OperatorConstants.kDriverControllerPort);
+  public static final CommandPS5Controller m_operatorController = new CommandPS5Controller(
+      OperatorConstants.kOperatorControllerPort);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -57,6 +67,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
+
+    // Arm-related commands
+    m_operatorController.triangle().whileTrue(new MoveArmUpCmd());
+    m_operatorController.cross().whileTrue(new MoveArmDownCmd());
+    m_operatorController.circle().onTrue(new BaseSetpoint());
+    m_operatorController.square().onTrue(new ShootNodeCmd());
+    
+    // Mute limit switch when the Right D-pad is held
+    m_operatorController.povRight().onTrue(new MuteLimitSwitch());
   }
 
   /**
@@ -66,6 +85,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return new MoveFwdAndShoot();
   }
 }

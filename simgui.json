@@ -1,0 +1,128 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon SRX[21]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Analog In": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Fwd Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Pulse Width Input": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Quad Encoder": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[21]/Rev Limit": {
+        "header": {
+          "open": true
+        }
+      },
+      "Victor SPX[16]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Arm": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Server": {
+      "open": true
+    },
+    "visible": true
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.05999999865889549,
+            0.05999999865889549,
+            0.05999999865889549,
+            0.9399999976158142
+          ],
+          "height": 314
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.05999999865889549,
+            0.05999999865889549,
+            0.05999999865889549,
+            0.9399999976158142
+          ],
+          "height": 314
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.05999999865889549,
+            0.05999999865889549,
+            0.05999999865889549,
+            0.9399999976158142
+          ],
+          "height": 314
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    }
+  }
+}
