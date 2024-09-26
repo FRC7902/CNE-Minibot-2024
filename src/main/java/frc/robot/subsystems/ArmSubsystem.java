@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -37,6 +39,7 @@ public class ArmSubsystem extends SubsystemBase {
   private static double adjusted_feedforward;
   private static boolean isHomed = false;
 
+  private final ArmFeedforward m_feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
   
   /** Object of a simulated arm **/
   private final SingleJointedArmSim armSim = new SingleJointedArmSim(
@@ -107,8 +110,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void configurePID() {
-    /*
-     * double ku = 0;
+    /* double ku = 0;
      * double tu = 0;
      * double[] pidConstants = util.setZieglerNicholsConstants(ku, tu);
      */
@@ -117,6 +119,7 @@ public class ArmSubsystem extends SubsystemBase {
     m_armMotor.config_kP(0, ArmConstants.kP);
     m_armMotor.config_kI(0, ArmConstants.kI);
     m_armMotor.config_kD(0, ArmConstants.kD);
+
   }
 
   public void setPower(double power) {
@@ -126,6 +129,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setSetpoint(double setpoint, int acceleration, int velocity) {
     m_armMotor.configMotionCruiseVelocity(velocity); // Adjust
     m_armMotor.configMotionAcceleration(acceleration); // Adjust
+    
     m_setpoint = setpoint;
     m_armMotor.set(ControlMode.MotionMagic, util.degToCTRESensorUnits(setpoint));
   }
@@ -194,26 +198,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // Calculate feedforward
-    adjusted_feedforward = ArmConstants.kArmFeedForward
-        * Math.cos(util.degToCTRESensorUnits(getAngle()));
+    double feedforward = m_feedforward.calculate(util.CTRESensorUnitsToRads(getAngle()), ArmConstants.kVelocitySetpoint, ArmConstants.kAccelerationSetpoint);
 
-    // Update SmartDashboard
-    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle()));
-    SmartDashboard.putNumber("Encoder ticks", getAngle());
-    SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
-    SmartDashboard.putNumber("Setpoint Ticks", m_armMotor.getActiveTrajectoryPosition());
-    SmartDashboard.putBoolean("Limit switch muted", isLimitSwitchMuted);
-    SmartDashboard.putNumber("Arm Feedforward", adjusted_feedforward);
-    SmartDashboard.putBoolean("Arm Fwd Limit Switch", m_armMotor.isFwdLimitSwitchClosed() == 1);
-    SmartDashboard.putBoolean("Arm Rev Limit Switch", m_armMotor.isRevLimitSwitchClosed() == 1);
-    SmartDashboard.putNumber("Encoder Output", m_armMotor.getSupplyCurrent());
-    SmartDashboard.putNumber("Motor Control Effort", m_armMotor.get());
-    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
-    SmartDashboard.putNumber("Error", m_armMotor.getClosedLoopError());
-    SmartDashboard.putNumber("Arm Velocity (deg/s)", util.encoderVelocityToDegPerSec(m_armMotor.getSelectedSensorVelocity()));
-    SmartDashboard.putBoolean("Arm Homed", isHomed);
-    
-    
+    // Calculate feedforward at current angle
+    adjusted_feedforward = feedforward * Math.cos(util.degToCTRESensorUnits(getAngle()));
+
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation
       m_armMotor.set(
@@ -222,6 +211,20 @@ public class ArmSubsystem extends SubsystemBase {
           DemandType.ArbitraryFeedForward, // For gravity compensation
           adjusted_feedforward);
     }
+    
+    // Update SmartDashboard
+    SmartDashboard.putNumber("Arm Angle", util.CTRESensorUnitsToDeg(getAngle()));
+    SmartDashboard.putNumber("Encoder ticks", getAngle());
+    SmartDashboard.putNumber("Arm Setpoint", m_setpoint);
+    SmartDashboard.putNumber("Setpoint Ticks", m_armMotor.getActiveTrajectoryPosition());
+    SmartDashboard.putBoolean("Limit switch muted", isLimitSwitchMuted);
+    SmartDashboard.putNumber("Arm Feedforward", adjusted_feedforward);
+    SmartDashboard.putNumber("Encoder Output", m_armMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("Motor Control Effort", m_armMotor.get());
+    SmartDashboard.putBoolean("At Setpoint", atSetpoint());
+    SmartDashboard.putNumber("Error", m_armMotor.getClosedLoopError());
+    SmartDashboard.putNumber("Arm Velocity (deg/s)", util.encoderVelocityToDegPerSec(m_armMotor.getSelectedSensorVelocity()));
+    SmartDashboard.putBoolean("Arm Homed", isHomed);
   }
 
   @Override

@@ -11,6 +11,8 @@ import frc.robot.ArmUtils;
 
 public class RaisedSetpoint extends Command {
 
+  private ArmUtils util = new ArmUtils();
+
   /** Creates a new RaisedSetpointCmd. */
   public RaisedSetpoint() {
     addRequirements(RobotContainer.m_armSubsystem);
@@ -36,6 +38,6 @@ public class RaisedSetpoint extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ArmUtils.CTRESensorUnitsToDeg(RobotContainer.m_armSubsystem.getAngle()) > ArmConstants.kRaisedSetpoint;
+    return util.CTRESensorUnitsToDeg(RobotContainer.m_armSubsystem.getAngle()) > ArmConstants.kRaisedSetpoint;
   }
 }
