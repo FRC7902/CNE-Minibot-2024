@@ -231,24 +231,19 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   /**
-   * Runs a quasistatic test for system identification.
-   * This test slowly ramps up the voltage to the motor.
-   * It helps determine the static friction (kS) and gravity (kG) feedforward gains.
-   * 
-   * @param direction The direction to run the test (forward or reverse)
-   * @return A Command that when executed will run the quasistatic test
-   * */
+   * Returns a command that will execute a quasistatic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.quasistatic(direction);
   }
-  
+
   /**
-   * Runs a dynamic test for system identification.
-   * This test applies a constant voltage to the motor suddenly.
-   * It helps determine the velocity (kV) and acceleration (kA) feedforward gains.
-   * @param direction The direction to run the test (forward or reverse)
-   * @return A Command that when executed will run the dynamic test
-   * */
+   * Returns a command that will execute a dynamic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
   }
@@ -270,14 +265,13 @@ public class ArmSubsystem extends SubsystemBase {
       m_armMotor.stopMotor();
     }
 
-    // Calculate feedforward
+    // Calculate feedforward, assume accel is 0
     double feedforward = m_feedforward.calculate(util.CTRESensorUnitsToRads(getAngle()), ArmConstants.kVelocitySetpoint, ArmConstants.kAccelerationSetpoint);
 
     // Calculate feedforward at current angle
     double adjusted_feedforward = feedforward * Math.cos(util.degToCTRESensorUnits(getAngle()));
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
-      // Update the simulation
       m_armMotor.set(
           ControlMode.MotionMagic,
           util.degToCTRESensorUnits(m_setpoint),

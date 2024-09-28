@@ -79,7 +79,7 @@ public class RobotContainer {
     m_operatorController.povRight().onTrue(new MuteLimitSwitch());
 
     // SysId bindings for arm characterization
-    // Using L1 (left bumper) as a modifier for SysId commands so that we can have both
+    // Using the left bumper as a modifier for SysId commands so that we can have both
     // sets of bindings as once.
     m_operatorController.L1().and(m_operatorController.triangle())  // Quasistatic forward test
         .onTrue(m_armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
@@ -89,8 +89,9 @@ public class RobotContainer {
     m_operatorController.L1().and(m_operatorController.circle())  // Dyanmic forward test
         .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
     m_operatorController.L1().and(m_operatorController.square())  // Dynamic reverse test
-        .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-}
+        .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));  
+  }
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
