@@ -11,12 +11,11 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -26,26 +25,79 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.ArmUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import static edu.wpi.first.units.Units.*;
 
 public class ArmSubsystem extends SubsystemBase {
+  public final static ArmUtils util = new ArmUtils();
+  private double m_setpoint = 0;
+  private static boolean isLimitSwitchMuted = false;
+  private static boolean isHomed = false;
 
   // Declare motor controller
   private final WPI_TalonSRX m_armMotor = new WPI_TalonSRX(ArmConstants.kArmMotorCAN);
 
-  public final static ArmUtils util = new ArmUtils();
-  private double m_setpoint = 0;
-  private static boolean isLimitSwitchMuted = false;
-  private static double adjusted_feedforward;
-  private static boolean isHomed = false;
+  // Create a new ArmFeedforward with gains kS, kG, kV, and kA
+  private final ArmFeedforward m_feedforward = new ArmFeedforward(
+    ArmConstants.kSVolts,
+    ArmConstants.kGVolts,
+    ArmConstants.kVVoltSecondPerRad,
+    ArmConstants.kAVoltSecondSquaredPerRad);
 
-  private final ArmFeedforward m_feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV);
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation
+  private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.zero(Volts);
+
+  // Mutable holder for unit-safe angle values, persisted to avoid reallocation
+  private final MutableMeasure<Angle> m_angle = MutableMeasure.zero(Degrees);
+
+  // Mutable holder for unit-safe velocity values, persisted to avoid reallocation
+  private final MutableMeasure<Velocity<Angle>> m_velocity = MutableMeasure.zero(DegreesPerSecond);
   
+  // Creates a SysIdRoutine for characterizing the arm
+  private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(
+    // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage
+    new SysIdRoutine.Config(),
+    new SysIdRoutine.Mechanism(
+      // Tell SysId how to plumb driving voltage to the motors
+      voltage -> m_armMotor.setVoltage(voltage.in(Volts)),
+
+      // Tell SysId how to record a frame of data for the motor on the mechanism being characterized
+      log -> {
+        // Record a frame for the arm motor
+         log.motor("arm-motor")
+         .voltage(
+            m_appliedVoltage.mut_replace(
+            m_armMotor.get() * RobotController.getBatteryVoltage(),   // Get actual voltage of the motor
+            Volts))
+
+          .angularPosition(
+            m_angle.mut_replace(
+            util.CTRESensorUnitsToDeg(getAngle()), 
+            Degrees))
+              
+          .angularVelocity(
+            m_velocity.mut_replace(
+            util.encoderVelocityToDegPerSec(m_armMotor.getSelectedSensorVelocity()), 
+            DegreesPerSecond));
+        },
+        this, 
+        "Arm Subsystem")
+);
+
+  // private final TrapezoidProfile m_profile = new TrapezoidProfile(TrapezoidProfile.Constraints());
+
   /** Object of a simulated arm **/
   private final SingleJointedArmSim armSim = new SingleJointedArmSim(
-      DCMotor.getCIM(2),
+      DCMotor.getCIM(1),
       139.78,
-      0.0035, // Moment of intertia
+      0.0035, // Moment of inertia
       0.639, // 0.3193m*2
       0,
       Math.PI,
@@ -69,8 +121,7 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     configureMotors();
     configurePID();
-    //softLimit(ArmConstants.kMaxAngle);
- 
+
     if (RobotBase.isSimulation()) {
       // Add the arm to the Mechanism2d display
       SmartDashboard.putData("Arm", m_mech2d);
@@ -161,7 +212,6 @@ public class ArmSubsystem extends SubsystemBase {
   public double modAngleInTicks(double angleInTicks) {
     // Modulo the angle to within 0 - 4096
     return Math.IEEEremainder(angleInTicks, ArmConstants.kEncoderCPR);
-
   }
 
   public void toggleLimitSwitchMute() {
@@ -178,6 +228,29 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void stopMotor() {
     m_armMotor.stopMotor();
+  }
+
+  /**
+   * Runs a quasistatic test for system identification.
+   * This test slowly ramps up the voltage to the motor.
+   * It helps determine the static friction (kS) and gravity (kG) feedforward gains.
+   * 
+   * @param direction The direction to run the test (forward or reverse)
+   * @return A Command that when executed will run the quasistatic test
+   * */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+  
+  /**
+   * Runs a dynamic test for system identification.
+   * This test applies a constant voltage to the motor suddenly.
+   * It helps determine the velocity (kV) and acceleration (kA) feedforward gains.
+   * @param direction The direction to run the test (forward or reverse)
+   * @return A Command that when executed will run the dynamic test
+   * */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
   }
 
   @Override
@@ -201,7 +274,7 @@ public class ArmSubsystem extends SubsystemBase {
     double feedforward = m_feedforward.calculate(util.CTRESensorUnitsToRads(getAngle()), ArmConstants.kVelocitySetpoint, ArmConstants.kAccelerationSetpoint);
 
     // Calculate feedforward at current angle
-    adjusted_feedforward = feedforward * Math.cos(util.degToCTRESensorUnits(getAngle()));
+    double adjusted_feedforward = feedforward * Math.cos(util.degToCTRESensorUnits(getAngle()));
 
     if (RobotBase.isSimulation() || !atSetpoint()) {
       // Update the simulation

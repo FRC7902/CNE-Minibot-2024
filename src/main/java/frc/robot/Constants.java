@@ -51,10 +51,10 @@ public final class Constants {
     public static final double kD = 0.0;
 
     // https://www.reca.lc/arm?armMass=%7B%22s%22%3A6%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A12.57%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A45%2C%22u%22%3A%22A%22%7D&efficiency=100&endAngle=%7B%22s%22%3A35%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22CIM%22%7D&ratio=%7B%22magnitude%22%3A100%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A0%2C%22u%22%3A%22deg%22%7D
-    public static final double kG = 0.42;
-    public static final double kS = 0;  // Obtain from sysld
-    public static final double kV = 2.15;  // Unused in position control
-    // public static final double kA = 0.0; // Omitted 
+    public static final double kGVolts = 0.42;
+    public static final double kSVolts = 0;      // Obtain from sysld
+    public static final double kVVoltSecondPerRad = 2.15;  // Unused in position control
+    public static final double kAVoltSecondSquaredPerRad = 0.0;   // Omitted 
 
     public static final double kVelocitySetpoint = 4.89; 
     public static final double kAccelerationSetpoint = 39.1;

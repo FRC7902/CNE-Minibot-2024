@@ -8,15 +8,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.autonomousCommands.MoveFwdAndShoot;
 import frc.robot.commands.autonomousCommands.ShootNodeCmd;
 import frc.robot.commands.teleopCommands.arm.BaseSetpoint;
+import frc.robot.commands.teleopCommands.arm.RaisedSetpoint;
 import frc.robot.commands.teleopCommands.arm.MoveArmDownCmd;
 import frc.robot.commands.teleopCommands.arm.MoveArmUpCmd;
 import frc.robot.commands.teleopCommands.arm.MuteLimitSwitch;
 import frc.robot.commands.teleopCommands.drive.CurvatureDriveCommand;
-//import frc.robot.commands.arm.RaisedSetpoint;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -48,7 +49,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
+    configureButtonBindings();
   }
 
   /**
@@ -65,19 +66,31 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
+  private void configureButtonBindings() {
     m_driveSubsystem.setDefaultCommand(new CurvatureDriveCommand());
 
     // Arm-related commands
     m_operatorController.triangle().whileTrue(new MoveArmUpCmd());
     m_operatorController.cross().whileTrue(new MoveArmDownCmd());
     m_operatorController.circle().onTrue(new BaseSetpoint());
-    m_operatorController.square().onTrue(new ShootNodeCmd());
-    
+    //m_operatorController.square().onTrue(new ShootNodeCmd());
+    m_operatorController.square().onTrue(new RaisedSetpoint());
     // Mute limit switch when the Right D-pad is held
     m_operatorController.povRight().onTrue(new MuteLimitSwitch());
-  }
 
+    // SysId bindings for arm characterization
+    // Using L1 (left bumper) as a modifier for SysId commands so that we can have both
+    // sets of bindings as once.
+    m_operatorController.L1().and(m_operatorController.triangle())  // Quasistatic forward test
+        .onTrue(m_armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    m_operatorController.L1().and(m_operatorController.cross())    // Quasistatic reverse test
+        .onTrue(m_armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    
+    m_operatorController.L1().and(m_operatorController.circle())  // Dyanmic forward test
+        .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    m_operatorController.L1().and(m_operatorController.square())  // Dynamic reverse test
+        .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
