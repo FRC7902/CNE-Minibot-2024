@@ -85,7 +85,6 @@ public class RobotContainer {
         .onTrue(m_armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     m_operatorController.L1().and(m_operatorController.cross())    // Quasistatic reverse test
         .onTrue(m_armSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    
     m_operatorController.L1().and(m_operatorController.circle())  // Dyanmic forward test
         .onTrue(m_armSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
     m_operatorController.L1().and(m_operatorController.square())  // Dynamic reverse test

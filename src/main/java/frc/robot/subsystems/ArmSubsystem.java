@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -91,7 +92,13 @@ public class ArmSubsystem extends SubsystemBase {
         "Arm Subsystem")
 );
 
-  // private final TrapezoidProfile m_profile = new TrapezoidProfile(TrapezoidProfile.Constraints());
+  // Create a motion profile with the given maximum velocity and maximum
+  // acceleration constraints for the next setpoint.
+  /* private final TrapezoidProfile m_profile = 
+    new TrapezoidProfile(TrapezoidProfile.Constraints(
+      ArmConstants.kVelocitySetpoint,
+      ArmConstants.kAccelerationSetpoint
+  )); */
 
   /** Object of a simulated arm **/
   private final SingleJointedArmSim armSim = new SingleJointedArmSim(
@@ -108,14 +115,17 @@ public class ArmSubsystem extends SubsystemBase {
   private final TalonSRXSimCollection m_armMotorSim = new TalonSRXSimCollection(m_armMotor);
 
   // Create a Mechanism2d visual display for the arm
-  private final Mechanism2d m_mech2d = new Mechanism2d(3, 3);
-  private final MechanismRoot2d m_armRoot = m_mech2d.getRoot("ArmPivot", 1.5, 0);
-  private final MechanismLigament2d m_armPivot = m_armRoot.append(new MechanismLigament2d(
-      "Arm",
-      0.639,
-      Units.radiansToDegrees(armSim.getAngleRads()), // In degrees
-      6,
-      new Color8Bit(Color.kPurple)));
+  private final Mechanism2d m_mech2d = new Mechanism2d(80, 80);
+  private final MechanismRoot2d m_armPivot = m_mech2d.getRoot("ArmPivot", 30, 30);
+  private final MechanismLigament2d m_arm =  m_armPivot.append(
+    new MechanismLigament2d(
+        "Arm",
+        40,    
+        Units.radiansToDegrees(armSim.getAngleRads()),     
+        6, 
+        new Color8Bit(Color.kAliceBlue)
+    )
+  );
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -124,7 +134,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     if (RobotBase.isSimulation()) {
       // Add the arm to the Mechanism2d display
-      SmartDashboard.putData("Arm", m_mech2d);
+      SmartDashboard.putData("Arm Mech2d", m_mech2d);
     }
   }
 
@@ -266,7 +276,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     // Calculate feedforward, assume accel is 0
-    double feedforward = m_feedforward.calculate(util.CTRESensorUnitsToRads(getAngle()), ArmConstants.kVelocitySetpoint, ArmConstants.kAccelerationSetpoint);
+    double feedforward = m_feedforward.calculate(
+      util.CTRESensorUnitsToRads(getAngle()),
+      ArmConstants.kVelocitySetpoint,
+      ArmConstants.kAccelerationSetpoint
+    );
 
     // Calculate feedforward at current angle
     double adjusted_feedforward = feedforward * Math.cos(util.degToCTRESensorUnits(getAngle()));
@@ -296,20 +310,21 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    armSim.update(0.02); // 20ms update time
     armSim.setInput(m_armMotorSim.getMotorOutputLeadVoltage());
+    armSim.update(0.02); 
 
     // Update the simulated encoder position
     m_armMotorSim.setQuadratureRawPosition(
         util.radsToCTRESensorUnits(armSim.getAngleRads()));
 
     // Update the mechanism ligament for visualization
-    m_armPivot.setAngle(Units.radiansToDegrees(armSim.getAngleRads()));
+    m_arm.setAngle(Math.toDegrees(armSim.getAngleRads()));
 
     // Reset encoder position when arm is at rest position
     if (armSim.getAngleRads() == Units.degreesToRadians(ArmConstants.kBaseSetpoint)) {
       m_armMotor.getSensorCollection().setQuadraturePosition(0, 0);
     }
+
     // Update analog position
     m_armMotorSim.setAnalogPosition(util.radsToCTRESensorUnits(armSim.getAngleRads()));
 

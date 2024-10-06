@@ -31,20 +31,41 @@
           "open": true
         }
       },
+      "Talon SRX[22]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[22]/Analog In": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon SRX[22]/Pulse Width Input": {
+        "header": {
+          "open": true
+        }
+      },
       "Victor SPX[16]": {
         "header": {
           "open": true
         }
+      }
+    },
+    "RoboRIO": {
+      "6V Rail": {
+        "open": true
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Arm": "Mechanism2d"
+      "/SmartDashboard/Arm": "Mechanism2d",
+      "/SmartDashboard/Arm Mech2d": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/Arm": {
+      "/SmartDashboard/Arm Mech2d": {
         "window": {
           "visible": true
         }
@@ -53,7 +74,7 @@
   },
   "NetworkTables": {
     "transitory": {
-      "Shuffleboard": {
+      "LiveWindow": {
         "open": true
       },
       "SmartDashboard": {
@@ -65,10 +86,21 @@
     "Clients": {
       "open": true
     },
-    "Server": {
+    "Connections": {
       "open": true
     },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      }
+    },
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plot": {
     "Plot <0>": {
@@ -96,7 +128,7 @@
             0.05999999865889549,
             0.9399999976158142
           ],
-          "height": 314
+          "height": 0
         }
       ],
       "window": {
@@ -118,6 +150,49 @@
             0.9399999976158142
           ],
           "height": 314
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.05999999865889549,
+            0.05999999865889549,
+            0.05999999865889549,
+            0.9399999976158142
+          ],
+          "height": 314
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <5>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.05999999865889549,
+            0.05999999865889549,
+            0.05999999865889549,
+            0.9399999976158142
+          ],
+          "height": 314,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Arm Angle"
+            }
+          ]
         }
       ],
       "window": {
