@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -27,6 +29,9 @@ public final class Constants {
     public static final int kLeftFrontCAN = 39;
     public static final int kRightBackCAN = 36;
     public static final int kRightFrontCAN = 37;
+
+    public static final double wheelDiamMetres = Units.inchesToMeters(6);
+    public static final double gearboxRatio = 10.71;
   }
 
   public static class OperatorConstants {

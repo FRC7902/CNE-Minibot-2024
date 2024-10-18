@@ -61,12 +61,16 @@ public class DriveSubsystem extends SubsystemBase {
   private final Encoder m_rightDummyEncoder = new Encoder(14, 15);
   private final AnalogGyro m_DummyGyro = new AnalogGyro(1);
 
+  // Simulations of encoders, gyro, and drivetrain
   private final EncoderSim m_rightEncoderSim;
   private final EncoderSim m_leftEncoderSim;
   private final AnalogGyroSim m_gyroSim;
   private final DifferentialDrivetrainSim m_driveTrainSim;
+
+  // Simulation of the field
   private final Field2d m_Field2d;
 
+  // Odometry (not specifically for simulation)
   private final DifferentialDriveOdometry m_odometry;
 
   /** Creates a new DriveSubsystem. */
@@ -80,6 +84,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftDummyEncoder.setDistancePerPulse(0.1524 * Math.PI / 1024);
     m_rightDummyEncoder.setDistancePerPulse(0.1524 * Math.PI / 1024);
 
+    // Connect simulated devices to physical (or dummy devices)
     m_leftEncoderSim = new EncoderSim(m_leftDummyEncoder);
     m_rightEncoderSim = new EncoderSim(m_rightDummyEncoder);
     m_gyroSim = new AnalogGyroSim(m_DummyGyro);
@@ -91,9 +96,11 @@ public class DriveSubsystem extends SubsystemBase {
         KitbotWheelSize.kSixInch,
         null);
 
+    // Simulate field and put it on the dashboard
     m_Field2d = new Field2d();
     SmartDashboard.putData(m_Field2d);
 
+    // Depending on simulation or not, use simulated devices or not
     if (Robot.isSimulation()) {
       m_odometry = new DifferentialDriveOdometry(
           m_DummyGyro.getRotation2d(),
@@ -139,6 +146,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftLeaderMotor.setIdleMode(IdleMode.kBrake);
     m_leftFollowerMotor.setIdleMode(IdleMode.kBrake);
 
+    m_leftEncoder.setPositionConversionFactor(DriveConstants.wheelDiamMetres / DriveConstants.gearboxRatio);
+    m_rightEncoder.setPositionConversionFactor(DriveConstants.wheelDiamMetres / DriveConstants.gearboxRatio);
+
   }
 
   public void resetEncoders() {
@@ -170,30 +180,38 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right drive", m_rightLeaderMotor.get());
     SmartDashboard.putNumber("Left drive", m_leftLeaderMotor.get());
 
+    // Update odometry with dummy devices
     m_odometry.update(
         m_DummyGyro.getRotation2d(),
         m_leftDummyEncoder.getDistance(),
         m_rightDummyEncoder.getDistance());
 
+    // Update robot's position on the field
     m_Field2d.setRobotPose(m_odometry.getPoseMeters());
   }
 
   @Override
   public void simulationPeriodic() {
 
+    // Translating motor output [-1, 1] to voltage for the simulation
     m_driveTrainSim.setInputs(
         m_leftLeaderMotor.get() * RobotController.getInputVoltage(),
         -m_rightLeaderMotor.get() * RobotController.getInputVoltage());
 
+    // Set an update delay just like the real 20 ms delay for non-simulated robots
     m_driveTrainSim.update(0.02);
 
-    // Update all of our sensors.
+    // Update all of our sensors
+    // Dummy devices need to be updated based on real devices
     m_leftEncoderSim.setDistance(m_driveTrainSim.getLeftPositionMeters());
     m_leftEncoderSim.setRate(m_driveTrainSim.getLeftVelocityMetersPerSecond());
     m_rightEncoderSim.setDistance(m_driveTrainSim.getRightPositionMeters());
     m_rightEncoderSim.setRate(m_driveTrainSim.getRightVelocityMetersPerSecond());
     m_gyroSim.setAngle(m_driveTrainSim.getHeading().getDegrees());
-    
+
+    m_leftEncoder.setPosition(m_driveTrainSim.getLeftPositionMeters());
+    m_rightEncoder.setPosition(m_driveTrainSim.getRightPositionMeters());
+
   }
 
 }
